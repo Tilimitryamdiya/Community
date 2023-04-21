@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/common_spacing">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_new_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card_line"
+            android:lines="10"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_image_button"
+            style="@style/Widget.AppTheme.AddButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_new_post" />
+
+        <TextView
+            android:id="@+id/textView_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            app:layout_constraintBottom_toBottomOf="@id/add_image_button"
+            app:layout_constraintStart_toEndOf="@id/add_image_button"
+            app:layout_constraintTop_toTopOf="@id/add_image_button"
+            tools:text="123.jpg" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_music_button"
+            style="@style/Widget.AppTheme.AddButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_music"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_image_button" />
+
+        <TextView
+            android:id="@+id/textView_music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            app:layout_constraintBottom_toBottomOf="@id/add_music_button"
+            app:layout_constraintStart_toEndOf="@id/add_music_button"
+            app:layout_constraintTop_toTopOf="@id/add_music_button"
+            tools:text="123.mp3" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_place_button"
+            style="@style/Widget.AppTheme.AddButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_place"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_music_button" />
+
+        <TextView
+            android:id="@+id/textView_coordinates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/common_spacing"
+            app:layout_constraintBottom_toBottomOf="@id/add_place_button"
+            app:layout_constraintStart_toEndOf="@id/add_place_button"
+            app:layout_constraintTop_toTopOf="@id/add_place_button"
+            tools:text="coordinates" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_post_button"
+            style="@style/Widget.AppTheme.SubmitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_post"
+            app:layout_constraintTop_toBottomOf="@id/add_place_button" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

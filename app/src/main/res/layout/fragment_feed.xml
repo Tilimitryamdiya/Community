@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/owner_avatar"
+        android:layout_width="@dimen/post_avatar_small"
+        android:layout_height="@dimen/post_avatar_small"
+        android:layout_margin="@dimen/common_spacing"
+        android:layout_marginBottom="@dimen/dimen_to_barrier"
+        android:background="@drawable/card_line"
+        android:contentDescription="@string/avatar"
+        android:padding="@dimen/padding_frame_avatar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/owner_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_spacing"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constraintBottom_toTopOf="@id/owner_job"
+        app:layout_constraintStart_toEndOf="@id/owner_avatar"
+        app:layout_constraintTop_toTopOf="@id/owner_avatar"
+        tools:text="John Wick" />
+
+    <TextView
+        android:id="@+id/owner_job"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_spacing"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constraintBottom_toBottomOf="@id/owner_avatar"
+        app:layout_constraintStart_toEndOf="@id/owner_avatar"
+        app:layout_constraintTop_toBottomOf="@id/owner_name"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Freelancer" />
+
+    <ImageView
+        android:id="@+id/users"
+        android:layout_width="@dimen/icon_button_min_size"
+        android:layout_height="@dimen/icon_button_min_size"
+        android:layout_marginHorizontal="@dimen/common_spacing"
+        android:contentDescription="@string/users"
+        android:src="@drawable/users"
+        app:layout_constraintEnd_toStartOf="@id/new_post_button"
+        app:layout_constraintTop_toTopOf="@id/new_post_button" />
+
+    <ImageView
+        android:id="@+id/new_post_button"
+        android:layout_width="@dimen/icon_button_min_size"
+        android:layout_height="@dimen/icon_button_min_size"
+        android:layout_marginHorizontal="@dimen/common_spacing"
+        android:contentDescription="@string/add_new_post"
+        android:src="@drawable/add_circle"
+        app:layout_constraintBottom_toBottomOf="@id/owner_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/owner_avatar" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="owner_avatar, owner_job, new_post_button, users" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/common_spacing"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        tools:listitem="@layout/card_post" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
