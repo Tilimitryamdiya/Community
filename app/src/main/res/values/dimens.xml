@@ -7,4 +7,5 @@
     <dimen name="post_avatar_small">48dp</dimen>
     <dimen name="icon_button_min_size">24dp</dimen>
     <dimen name="card_elevation">8dp</dimen>
+    <dimen name="edit_text_height">40dp</dimen>
 </resources>

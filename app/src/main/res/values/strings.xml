@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Community</string>
+    <string name="error_loading">Something went wrong. Try again later</string>
+    <string name="cancel">Cancel</string>
+    <string name="retry">Retry</string>
+
 
     <!--    Card post/event -->
     <string name="description_post_author_avatar">Post author avatar</string>
@@ -19,4 +23,24 @@
     <string name="type_of_event">Type of event</string>
     <string name="date_of_event">Date of event</string>
     <string name="location">Location</string>
+
+    <!-- Authorization, registration -->
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_out">Sign out</string>
+    <string name="register">Register</string>
+    <string name="invalidAuth">Invalid login/password</string>
+    <string name="blankAuth">Login or password is blank</string>
+    <string name="confirm_signOut">Are you sure?</string>
+    <string name="name">Name</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="match_passwords">Passwords must match</string>
+    <string name="blankRegister">Name, login or password is blank</string>
+    <string name="clear_avatar">Clear avatar</string>
+    <string name="description_preview">Image preview</string>
+    <string name="description_choose_gallery">Choose image from the gallery</string>
+    <string name="description_make_photo">Make a photo</string>
+
 </resources>

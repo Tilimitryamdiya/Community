@@ -79,6 +79,6 @@
         android:layout_marginTop="@dimen/common_spacing"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/header"
-        tools:listitem="@layout/card_post" />
+        tools:listitem="@layout/card_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
