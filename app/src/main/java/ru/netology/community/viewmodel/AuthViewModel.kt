@@ -11,6 +11,7 @@ import ru.netology.community.model.AuthModel
 import ru.netology.community.model.AuthModelState
 import ru.netology.community.repository.auth.AuthRepository
 import ru.netology.community.dialog.SignOutDialog
+import ru.netology.nmedia.dialog.SignInDialog
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,5 +58,14 @@ class AuthViewModel @Inject constructor(
 
     fun confirmLogout(manager: FragmentManager) {
         SignOutDialog().show(manager, SignOutDialog.TAG)
+    }
+
+    fun isAuthorized(manager: FragmentManager): Boolean {
+        return if (appAuth.authState.value != AuthModel()) {
+            true
+        } else {
+            SignInDialog().show(manager, SignInDialog.TAG)
+            false
+        }
     }
 }

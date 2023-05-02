@@ -14,7 +14,6 @@ import ru.netology.community.dto.FeedItem
 import ru.netology.community.dto.Media
 import ru.netology.community.dto.Post
 import ru.netology.community.entity.post.PostEntity
-import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.error.ApiError
 import ru.netology.community.error.NetworkError
 import ru.netology.community.error.UnknownError
@@ -83,7 +82,7 @@ class PostRepositoryImpl @Inject constructor(
 
             val response = apiService.createPost(
                 post.copy(
-                    attachment = Attachment(uploadMedia.id, AttachmentType.IMAGE),
+                    attachment = Attachment(uploadMedia.url, media.type),
                 )
             )
             if (!response.isSuccessful) {
@@ -99,31 +98,41 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     private suspend fun upload(media: MediaModel): Media {
-        val part = MultipartBody.Part.createFormData(
-            "file", media.file.name, media.file.asRequestBody()
-        )
-        val response = apiService.uploadMedia(part)
-        if (!response.isSuccessful) {
-            throw ApiError(response.code(), response.message())
-        }
-        return requireNotNull(response.body())
-    }
-
-    override suspend fun removeById(id: Int) {
-        val postToDelete = postDao.getPostById(id)
-        postDao.removeById(id)
         try {
-            val response = apiService.deletePost(id)
+            val part = MultipartBody.Part.createFormData(
+                "file", media.file.name, media.file.asRequestBody()
+            )
+            val response = apiService.uploadMedia(part)
             if (!response.isSuccessful) {
-                postDao.insert(postToDelete)
                 throw ApiError(response.code(), response.message())
             }
+            return response.body() ?: throw ApiError(response.code(), response.message())
         } catch (e: IOException) {
-            postDao.insert(postToDelete)
             throw NetworkError
         } catch (e: Exception) {
-            postDao.insert(postToDelete)
             throw UnknownError
         }
     }
+
+    override suspend fun removeById(id: Int) {
+        postDao.getPostById(id)?.let { postToDelete ->
+            postDao.removeById(id)
+            try {
+                val response = apiService.deletePost(id)
+                if (!response.isSuccessful) {
+                    postDao.insert(postToDelete)
+                    throw ApiError(response.code(), response.message())
+                }
+            } catch (e: IOException) {
+                postDao.insert(postToDelete)
+                throw NetworkError
+            } catch (e: Exception) {
+                postDao.insert(postToDelete)
+                throw UnknownError
+            }
+        }
+    }
+
+    override suspend fun getById(id: Int): Post? =
+        postDao.getPostById(id)?.toDto()
 }

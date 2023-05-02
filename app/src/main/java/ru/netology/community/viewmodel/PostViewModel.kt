@@ -1,7 +1,6 @@
 package ru.netology.community.viewmodel
 
 import android.net.Uri
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,14 +10,13 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import ru.netology.community.auth.AppAuth
 import ru.netology.community.dto.FeedItem
 import ru.netology.community.dto.Post
-import ru.netology.community.model.AuthModel
+import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.model.FeedModelState
 import ru.netology.community.model.MediaModel
 import ru.netology.community.repository.post.PostRepository
-import ru.netology.nmedia.dialog.SignInDialog
+import ru.netology.community.utils.SingleLiveEvent
 import java.io.File
 import javax.inject.Inject
 
@@ -38,8 +36,7 @@ private val empty = Post(
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val repository: PostRepository,
-    private val appAuth: AppAuth
+    private val repository: PostRepository
 ) : ViewModel() {
     private val cached = repository
         .data
@@ -57,22 +54,17 @@ class PostViewModel @Inject constructor(
     val media: LiveData<MediaModel?>
         get() = _media
 
+    private val _postCreated = SingleLiveEvent<Unit>()
+    val postCreated: LiveData<Unit>
+        get() = _postCreated
 
-    fun changePhoto(uri: Uri, file: File) {
-        _media.value = MediaModel(uri, file)
+
+    fun addPhoto(uri: Uri, file: File, type: AttachmentType) {
+        _media.value = MediaModel(uri, file, type)
     }
 
     fun clearPhoto() {
         _media.value = null
-    }
-
-    fun isAuthorized(manager: FragmentManager): Boolean {
-        return if (appAuth.authState.value != AuthModel()) {
-            true
-        } else {
-            SignInDialog().show(manager, SignInDialog.TAG)
-            false
-        }
     }
 
     fun save() {
@@ -86,6 +78,7 @@ class PostViewModel @Inject constructor(
                                 repository.saveWithAttachment(it, media)
                             }
                         }
+                        _postCreated.value = Unit
                         edited.value = empty
                         clearPhoto()
                         _dataState.value = FeedModelState()
@@ -129,6 +122,16 @@ class PostViewModel @Inject constructor(
             } catch (e: Exception) {
                 _dataState.value = FeedModelState(error = true)
             }
+        }
+    }
+
+    private val _post = MutableLiveData<Post?>(null)
+    val post: LiveData<Post?>
+        get() = _post
+
+    fun getById(id: Int) {
+        viewModelScope.launch {
+            _post.value = repository.getById(id)
         }
     }
 }

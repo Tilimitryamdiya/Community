@@ -3,13 +3,16 @@ package ru.netology.community.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.netology.community.R
 import ru.netology.community.databinding.CardItemBinding
 import ru.netology.community.dto.Event
 import ru.netology.community.dto.FeedItem
+import ru.netology.community.enumeration.EventType
 import ru.netology.community.view.load
 import ru.netology.community.view.loadAttachment
 
@@ -53,16 +56,36 @@ class FeedViewHolder(
     fun bind(feedItem: FeedItem) {
         binding.apply {
             feedItem.authorAvatar?.let { avatar.load(it) }
+                ?: avatar.setImageResource(R.drawable.no_avatar)
             author.text = feedItem.author
             authorJob.text = feedItem.authorJob
             published.text = feedItem.published
             content.text = feedItem.content
 
             like.isChecked = feedItem.likedByMe
-//        like.text = feedItem.likeOwnerIds.size.toString()
+            like.text = feedItem.likeOwnerIds.size.toString()
             like.setOnClickListener { listener.onLike(feedItem) }
 
             menu.isVisible = feedItem.ownedByMe
+
+            menu.setOnClickListener {
+                PopupMenu(it.context, it).apply {
+                    inflate(R.menu.options_post)
+                    setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.delete -> {
+                                listener.onRemove(feedItem)
+                                true
+                            }
+                            R.id.edit -> {
+                                listener.onEdit(feedItem)
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                }.show()
+            }
 
             if (feedItem.attachment != null) {
                 attachment.visibility = View.VISIBLE
@@ -75,6 +98,10 @@ class FeedViewHolder(
                 eventGroup.visibility = View.VISIBLE
                 eventDate.text = feedItem.datetime
                 eventType.text = feedItem.type.toString()
+                when (feedItem.type) {
+                    EventType.ONLINE -> typeOfEventIcon.setImageResource(R.drawable.online_event)
+                    EventType.OFFLINE -> typeOfEventIcon.setImageResource(R.drawable.offline_event)
+                }
             } else {
                 eventGroup.visibility = View.GONE
             }
@@ -114,4 +141,6 @@ class FeedDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
 interface OnInteractionListener {
     fun onLike(feedItem: FeedItem)
     fun onRemove(feedItem: FeedItem)
+
+    fun onEdit(feedItem: FeedItem)
 }

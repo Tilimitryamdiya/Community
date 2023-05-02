@@ -25,7 +25,6 @@ data class PostEntity(
     val attachment: Attachment? = null,
     val ownedByMe: Boolean,
     val users: Map<Int, UserPreview> = emptyMap(),
-    val isPaying: Boolean = false
 ) {
     fun toDto() = Post(
         id = id,
@@ -44,7 +43,6 @@ data class PostEntity(
         attachment = attachment,
         ownedByMe = ownedByMe,
         users = users,
-        isPaying = isPaying
     )
 
     companion object {
@@ -65,7 +63,6 @@ data class PostEntity(
             attachment = post.attachment,
             ownedByMe = post.ownedByMe,
             users = post.users,
-            isPaying = post.isPaying
         )
     }
 }

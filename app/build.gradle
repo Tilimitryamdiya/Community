@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "ru.netology.community"
-        minSdk 24
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -46,8 +46,8 @@ android {
 dependencies {
 
 //  LeakCanary to detect leaks
-    def leakcanary_version = "2.10"
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
+//    def leakcanary_version = "2.10"
+//    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
 
     def core_version = "1.9.0"
     def appcompat_version = "1.6.1"

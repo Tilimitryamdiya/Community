@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.netology.community.auth.AppAuth
+import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.model.AuthModel
 import ru.netology.community.model.AuthModelState
 import ru.netology.community.model.MediaModel
@@ -62,8 +63,8 @@ class RegisterViewModel @Inject constructor(
         clearPhoto()
     }
 
-    fun addPhoto(uri: Uri, file: File) {
-        _media.value = MediaModel(uri, file)
+    fun addPhoto(uri: Uri, file: File, type: AttachmentType) {
+        _media.value = MediaModel(uri, file, type)
     }
 
     fun clearPhoto() {

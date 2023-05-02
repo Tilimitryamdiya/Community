@@ -1,9 +1,11 @@
 package ru.netology.community.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
 import androidx.core.view.isGone
@@ -16,6 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.community.R
 import ru.netology.community.databinding.FragmentRegistrationBinding
+import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.utils.AndroidUtils
 import ru.netology.community.viewmodel.RegisterViewModel
 
@@ -25,6 +28,7 @@ class RegistrationFragment : Fragment() {
     private var _binding: FragmentRegistrationBinding? = null
     private val binding get() = _binding!!
     private val viewModel: RegisterViewModel by activityViewModels()
+    private var imageLauncher: ActivityResultLauncher<Intent>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +36,7 @@ class RegistrationFragment : Fragment() {
     ): View {
         _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
 
-        val photoLauncher =
+        imageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 when (it.resultCode) {
                     ImagePicker.RESULT_ERROR -> {
@@ -41,7 +45,7 @@ class RegistrationFragment : Fragment() {
                     }
                     else -> {
                         val uri = it.data?.data ?: return@registerForActivityResult
-                        viewModel.addPhoto(uri, uri.toFile())
+                        viewModel.addPhoto(uri, uri.toFile(), AttachmentType.IMAGE)
                     }
                 }
             }
@@ -56,24 +60,31 @@ class RegistrationFragment : Fragment() {
             }
         }
 
+        with(binding) {
 
-        binding.registerButton.setOnClickListener {
-            val login = binding.signUpLogin.text.toString()
-            val password = binding.signUpPassword.text.toString()
-            val confirmPassword = binding.confirmPassword.text.toString()
-            val name = binding.signUpName.text.toString()
+            registerButton.setOnClickListener {
+                val login = signUpLogin.text.toString()
+                val password = signUpPassword.text.toString()
+                val confirmPassword = confirmPassword.text.toString()
+                val name = signUpName.text.toString()
 
-            if (password == confirmPassword) {
-                viewModel.register(login, password, name)
-                AndroidUtils.hideKeyboard(requireView())
-            } else {
-                Snackbar.make(
-                    binding.root,
-                    R.string.match_passwords,
-                    Snackbar.LENGTH_LONG
-                ).show()
+                if (password == confirmPassword) {
+                    viewModel.register(login, password, name)
+                    AndroidUtils.hideKeyboard(requireView())
+                } else {
+                    Snackbar.make(
+                        binding.root,
+                        R.string.match_passwords,
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+            close.setOnClickListener {
+                findNavController().navigateUp()
             }
         }
+
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
 
@@ -105,7 +116,7 @@ class RegistrationFragment : Fragment() {
                 .cameraOnly()
                 .crop()
                 .compress(2048)
-                .createIntent(photoLauncher::launch)
+                .createIntent(imageLauncher!!::launch)
         }
 
         binding.gallery.setOnClickListener {
@@ -113,7 +124,7 @@ class RegistrationFragment : Fragment() {
                 .galleryOnly()
                 .crop()
                 .compress(2048)
-                .createIntent(photoLauncher::launch)
+                .createIntent(imageLauncher!!::launch)
         }
 
         binding.clear.setOnClickListener {
@@ -126,5 +137,6 @@ class RegistrationFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        imageLauncher = null
     }
 }

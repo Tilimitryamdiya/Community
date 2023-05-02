@@ -33,6 +33,10 @@ class LoginFragment : Fragment() {
                 val password = signUpPassword.text.toString()
                 viewModel.login(login, password)
             }
+
+            close.setOnClickListener {
+                findNavController().navigateUp()
+            }
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->

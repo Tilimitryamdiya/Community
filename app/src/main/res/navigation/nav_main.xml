@@ -3,7 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/feedFragment">
+    app:startDestination="@id/greetingFragment">
+
+    <fragment
+        android:id="@+id/greetingFragment"
+        android:name="ru.netology.community.ui.GreetingFragment"
+        tools:layout="@layout/fragment_greeting">
+        <action
+            android:id="@+id/action_greetingFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
+        <action
+            android:id="@+id/action_greetingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_greetingFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/feedFragment"
@@ -13,8 +28,14 @@
             android:id="@+id/action_feedFragment_to_newPostFragment"
             app:destination="@id/newPostFragment" />
         <action
+            android:id="@+id/action_feedFragment_to_newEventFragment"
+            app:destination="@id/newEventFragment" />
+        <action
             android:id="@+id/action_feedFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
     </fragment>
 
     <fragment
@@ -23,13 +44,20 @@
         tools:layout="@layout/fragment_new_post" />
 
     <fragment
+        android:id="@+id/newEventFragment"
+        android:name="ru.netology.community.ui.NewEventFragment"
+        tools:layout="@layout/fragment_new_post" />
+
+    <fragment
         android:id="@+id/loginFragment"
         android:name="ru.netology.community.ui.LoginFragment"
+        tools:layout="@layout/fragment_login"
         android:label="@string/sign_in" />
 
     <fragment
         android:id="@+id/registerFragment"
         android:name="ru.netology.community.ui.RegistrationFragment"
+        tools:layout="@layout/fragment_registration"
         android:label="@string/sign_in" />
 
 </navigation>

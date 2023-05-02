@@ -10,13 +10,11 @@ import ru.netology.community.entity.post.PostEntity
 @Dao
 interface PostDao {
 
-
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")
     fun getPagingSource(): PagingSource<Int, PostEntity>
 
-
     @Query("SELECT * FROM PostEntity WHERE id = :id")
-    suspend fun getPostById(id: Int): PostEntity
+    suspend fun getPostById(id: Int): PostEntity?
 
     @Query("SELECT COUNT(*) == 0 FROM PostEntity")
     suspend fun isEmpty(): Boolean

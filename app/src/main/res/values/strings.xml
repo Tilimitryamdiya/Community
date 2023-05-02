@@ -9,13 +9,16 @@
     <string name="description_post_author_avatar">Post author avatar</string>
     <string name="description_post_menu">Post menu</string>
     <string name="description_like_button">Like</string>
+    <!--  Menu  -->
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
 
 
     <!--    Create post/event   -->
     <string name="add_image">Add Image</string>
     <string name="add_music">Add Music</string>
     <string name="add_place">Add Place</string>
-    <string name="create_post">Create post</string>
+    <string name="create_post">Create</string>
     <string name="avatar">Avatar</string>
     <string name="users">Users</string>
     <string name="add_new_post">Add new post</string>
@@ -25,10 +28,11 @@
     <string name="location">Location</string>
 
     <!-- Authorization, registration -->
+    <string name="greeting">Hi! \n Let`s get started! \n Join COMMUNITY!</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
-    <string name="register">Register</string>
+    <string name="join">Join</string>
     <string name="invalidAuth">Invalid login/password</string>
     <string name="blankAuth">Login or password is blank</string>
     <string name="confirm_signOut">Are you sure?</string>
@@ -42,5 +46,19 @@
     <string name="description_preview">Image preview</string>
     <string name="description_choose_gallery">Choose image from the gallery</string>
     <string name="description_make_photo">Make a photo</string>
+    <string name="close_button">Close button</string>
+    <string name="authorization">Authorization</string>
+    <string name="posts">Posts</string>
+    <string name="events">Events</string>
+    <string name="add_post">Add post</string>
+    <string name="add_event">Add event</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="add_link">Add link</string>
+    <string name="add_date">Add date</string>
+    <string name="add_time">Add time</string>
+    <string name="make_photo">Make a photo</string>
+    <string name="open_gallery">Open gallery</string>
+    <string name="clear">Clear</string>
 
 </resources>

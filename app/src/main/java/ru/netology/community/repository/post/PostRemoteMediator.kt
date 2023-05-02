@@ -12,15 +12,17 @@ import ru.netology.community.db.AppDatabase
 import ru.netology.community.entity.post.PostEntity
 import ru.netology.community.entity.post.PostRemoteKeyEntity
 import ru.netology.community.entity.post.toEntity
+import ru.netology.community.enumeration.RemoteKeyType
 import ru.netology.community.error.ApiError
+import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class PostRemoteMediator(
+class PostRemoteMediator @Inject constructor(
     private val service: ApiService,
     private val postDao: PostDao,
     private val appDb: AppDatabase,
     private val postRemoteKeyDao: PostRemoteKeyDao,
-): RemoteMediator<Int, PostEntity>() {
+) : RemoteMediator<Int, PostEntity>() {
 
     override suspend fun load(
         loadType: LoadType,
@@ -55,11 +57,11 @@ class PostRemoteMediator(
                             postRemoteKeyDao.insert(
                                 listOf(
                                     PostRemoteKeyEntity(
-                                        type = PostRemoteKeyEntity.KeyType.AFTER,
+                                        type = RemoteKeyType.AFTER,
                                         id = body.first().id,
                                     ),
                                     PostRemoteKeyEntity(
-                                        type = PostRemoteKeyEntity.KeyType.BEFORE,
+                                        type = RemoteKeyType.BEFORE,
                                         id = body.last().id
                                     ),
                                 )
@@ -68,7 +70,7 @@ class PostRemoteMediator(
                         } else {
                             postRemoteKeyDao.insert(
                                 PostRemoteKeyEntity(
-                                    type = PostRemoteKeyEntity.KeyType.AFTER,
+                                    type = RemoteKeyType.AFTER,
                                     id = body.first().id
                                 )
                             )
@@ -78,7 +80,7 @@ class PostRemoteMediator(
                     LoadType.APPEND -> {
                         postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
-                                type = PostRemoteKeyEntity.KeyType.BEFORE,
+                                type = RemoteKeyType.BEFORE,
                                 id = body.last().id,
                             )
                         )

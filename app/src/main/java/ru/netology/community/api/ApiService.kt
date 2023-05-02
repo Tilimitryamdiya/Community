@@ -4,10 +4,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
-import ru.netology.community.dto.Event
-import ru.netology.community.dto.Media
-import ru.netology.community.dto.Post
-import ru.netology.community.dto.PushToken
+import ru.netology.community.dto.*
 import ru.netology.community.model.AuthModel
 
 interface ApiService {
@@ -21,14 +18,14 @@ interface ApiService {
     @POST("users/authentication")
     suspend fun login(
         @Field("login") login: String,
-        @Field("pass") pass: String
+        @Field("password") password: String
     ): Response<AuthModel>
 
     @FormUrlEncoded
     @POST("users/registration")
     suspend fun register(
         @Field("login") login: String,
-        @Field("pass") pass: String,
+        @Field("password") password: String,
         @Field("name") name: String
     ): Response<AuthModel>
 
@@ -37,10 +34,11 @@ interface ApiService {
     @POST("users/registration")
     suspend fun registerWithPhoto(
         @Part("login") login: RequestBody,
-        @Part("pass") pass: RequestBody,
+        @Part("password") password: RequestBody,
         @Part("name") name: RequestBody,
         @Part media: MultipartBody.Part,
     ): Response<AuthModel>
+
 
     // Posts
 
@@ -113,9 +111,20 @@ interface ApiService {
     @DELETE("events/{id}/participants")
     suspend fun deleteParticipateEventById(@Path("id") eventId: Int): Response<Event>
 
+
     // Media
+
     @Multipart
     @POST("media")
-    suspend fun uploadMedia(@Part part: MultipartBody.Part): Response<Media>
+    suspend fun uploadMedia(@Part file: MultipartBody.Part): Response<Media>
+
+
+    //User
+
+    @GET("users")
+    suspend fun getAll(): Response<List<User>>
+
+    @GET("users/{id}")
+    suspend fun getUserById(@Path("id") id: Int): Response<User>
 
 }
