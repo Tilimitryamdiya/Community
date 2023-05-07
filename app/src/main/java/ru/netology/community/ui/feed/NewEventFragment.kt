@@ -1,6 +1,7 @@
-package ru.netology.community.ui
+package ru.netology.community.ui.feed
 
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,16 +17,14 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.community.R
 import ru.netology.community.databinding.FragmentNewPostBinding
+import ru.netology.community.dto.Event
 import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.enumeration.EventType
 import ru.netology.community.utils.AndroidUtils
 import ru.netology.community.viewmodel.EventViewModel
+import java.util.*
 
 class NewEventFragment : Fragment() {
-
-    companion object {
-        const val EVENT_ID = "EVENT_ID"
-    }
 
     private var _binding: FragmentNewPostBinding? = null
     private val binding get() = _binding!!
@@ -41,13 +40,19 @@ class NewEventFragment : Fragment() {
         _binding = FragmentNewPostBinding.inflate(inflater, container, false)
         binding.eventGroup.isVisible = true
 
-        arguments?.getInt(EVENT_ID)?.apply {
-            viewModel.getById(this)
+        var event: Event? = null
+        viewModel.edited.observe(viewLifecycleOwner) {
+            if (it?.content != "") {
+                event = it
+                binding.editNewPost.setText(it.content)
+                binding.textViewDate.text = AndroidUtils.formatDateTime(it.datetime)
+                if (it.type == EventType.OFFLINE) {
+                    binding.typeOffline.isChecked
+                } else {
+                    binding.typeOnline.isChecked
+                }
+            }
         }
-        viewModel.event.observe(viewLifecycleOwner) {
-            binding.editNewPost.setText(it?.content)
-        }
-
 
         imageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -64,36 +69,49 @@ class NewEventFragment : Fragment() {
             }
 
         binding.addDate.setOnClickListener {
-            val newFragment =
+            val datePickerFragment =
                 DatePickerFragment { day, month, year ->
-                    val d = if (day < 10) "0$day" else "$day"
-                    val m = if (month < 10) "0$month" else "$month"
-                    viewModel.addDate("$year-$m-$d")
+                    val selectedDate = Calendar.getInstance()
+                    selectedDate.set(Calendar.YEAR, year)
+                    selectedDate.set(Calendar.MONTH, month - 1)
+                    selectedDate.set(Calendar.DAY_OF_MONTH, day)
+                    val date = SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.ROOT
+                    ).format(selectedDate.time)
+                    binding.textViewDate.text = date
                 }
-            newFragment.show(childFragmentManager, "datePicker")
+            datePickerFragment.show(childFragmentManager, "datePicker")
 
         }
 
         binding.addTime.setOnClickListener {
-            //TODO: отнимает 3 часа после приведения к формату!
-            val newFragment =
-                TimePickerFragment { hourOfDay, minute ->
-                    val h = if (hourOfDay < 10) "0$hourOfDay" else "$hourOfDay"
-                    val m = if (minute < 10) "0$minute" else "$minute"
-                    viewModel.addTime("$h:$m")
+            val timePickerFragment =
+                TimePickerFragment { hour, minute ->
+                    val selectedTime = Calendar.getInstance()
+                    selectedTime.set(Calendar.HOUR_OF_DAY, hour)
+                    selectedTime.set(Calendar.MINUTE, minute)
+                    val time =
+                        SimpleDateFormat("HH:mm", Locale.ROOT).format(selectedTime.time)
+                    binding.textViewTime.text = time
                 }
-            newFragment.show(childFragmentManager, "timePicker")
-        }
-
-        viewModel.date.observe(viewLifecycleOwner) { date ->
-            binding.textViewDate.text = date ?: ""
-        }
-
-        viewModel.time.observe(viewLifecycleOwner) { time ->
-            binding.textViewTime.text = time ?: ""
+            timePickerFragment.show(childFragmentManager, "timePicker")
         }
 
         binding.createButton.setOnClickListener {
+            val content = binding.editNewPost.text.toString()
+            val datetime =
+                if (binding.textViewDate.text.isNotBlank() && binding.textViewTime.text.isNotBlank()) {
+                    binding.textViewDate.text.toString() + "T" + binding.textViewTime.text.toString() + ":00.000000Z"
+                } else event?.datetime ?: ""
+            if (datetime.isBlank()) {
+                Snackbar.make(
+                    binding.root,
+                    R.string.empty_datetime,
+                    Snackbar.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
             val eventType =
                 if (binding.typeOffline.isChecked) {
                     EventType.OFFLINE
@@ -101,7 +119,8 @@ class NewEventFragment : Fragment() {
                     EventType.ONLINE
                 }
             viewModel.changeContent(
-                binding.editNewPost.text.toString(),
+                content = content,
+                datetime = datetime,
                 eventType = eventType
             )
             viewModel.save()

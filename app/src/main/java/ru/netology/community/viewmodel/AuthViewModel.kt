@@ -56,8 +56,8 @@ class AuthViewModel @Inject constructor(
         _state.value = AuthModelState(notLoggedIn = true)
     }
 
-    fun confirmLogout(manager: FragmentManager) {
-        SignOutDialog().show(manager, SignOutDialog.TAG)
+    fun confirmLogout(manager: FragmentManager, listener: SignOutDialog.ConfirmationListener) {
+        SignOutDialog(listener).show(manager, SignOutDialog.TAG)
     }
 
     fun isAuthorized(manager: FragmentManager): Boolean {

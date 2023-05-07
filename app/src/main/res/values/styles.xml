@@ -32,4 +32,11 @@
         <item name="android:layout_margin">20dp</item>
     </style>
 
+    <style name="Widget.AppTheme.PlayPauseButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="iconTint">@color/color_primary</item>
+        <item name="icon">@drawable/selector_play_pause</item>
+        <item name="android:minWidth">@dimen/icon_button_min_size</item>
+        <item name="android:minHeight">@dimen/icon_button_min_size</item>
+    </style>
+
 </resources>

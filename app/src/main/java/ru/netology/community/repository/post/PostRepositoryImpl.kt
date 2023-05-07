@@ -8,12 +8,15 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import ru.netology.community.api.ApiService
 import ru.netology.community.dao.post.PostDao
 import ru.netology.community.dao.post.PostRemoteKeyDao
+import ru.netology.community.dao.wall.WallDao
+import ru.netology.community.dao.wall.WallRemoteKeyDao
 import ru.netology.community.db.AppDatabase
 import ru.netology.community.dto.Attachment
 import ru.netology.community.dto.FeedItem
 import ru.netology.community.dto.Media
 import ru.netology.community.dto.Post
 import ru.netology.community.entity.post.PostEntity
+import ru.netology.community.entity.wall.WallEntity
 import ru.netology.community.error.ApiError
 import ru.netology.community.error.NetworkError
 import ru.netology.community.error.UnknownError
@@ -25,7 +28,9 @@ class PostRepositoryImpl @Inject constructor(
     private val postDao: PostDao,
     private val apiService: ApiService,
     postRemoteKeyDao: PostRemoteKeyDao,
-    appDb: AppDatabase
+    private val appDb: AppDatabase,
+    private val wallDao: WallDao,
+    private val wallRemoteKeyDao: WallRemoteKeyDao
 ) : PostRepository {
 
     @OptIn(ExperimentalPagingApi::class)
@@ -40,6 +45,20 @@ class PostRepositoryImpl @Inject constructor(
         pagingSourceFactory = postDao::getPagingSource,
     ).flow
         .map { it.map(PostEntity::toDto) }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun userWall(id: Int): Flow<PagingData<FeedItem>> = Pager(
+        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
+        remoteMediator = WallRemoteMediator(
+            service = apiService,
+            appDb = appDb,
+            wallDao = wallDao,
+            wallRemoteKeyDao = wallRemoteKeyDao,
+            authorId = id
+        ),
+        pagingSourceFactory = wallDao::getPagingSource,
+    ).flow
+        .map { it.map(WallEntity::toDto) }
 
     override suspend fun likeById(post: Post) {
         try {

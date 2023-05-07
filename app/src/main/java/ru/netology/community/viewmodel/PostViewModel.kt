@@ -44,6 +44,9 @@ class PostViewModel @Inject constructor(
 
     val data: Flow<PagingData<FeedItem>> = cached
 
+
+    fun wallData(userId: Int): Flow<PagingData<FeedItem>> = repository.userWall(userId)
+
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -57,7 +60,6 @@ class PostViewModel @Inject constructor(
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
-
 
     fun addPhoto(uri: Uri, file: File, type: AttachmentType) {
         _media.value = MediaModel(uri, file, type)
@@ -93,6 +95,11 @@ class PostViewModel @Inject constructor(
     fun edit(post: Post) {
         edited.value = post
     }
+    fun clearEdited() {
+        edited.value = null
+    }
+    fun getEditPost() = edited.value
+
 
     fun changeContent(content: String) {
         val text = content.trim()
@@ -122,16 +129,6 @@ class PostViewModel @Inject constructor(
             } catch (e: Exception) {
                 _dataState.value = FeedModelState(error = true)
             }
-        }
-    }
-
-    private val _post = MutableLiveData<Post?>(null)
-    val post: LiveData<Post?>
-        get() = _post
-
-    fun getById(id: Int) {
-        viewModelScope.launch {
-            _post.value = repository.getById(id)
         }
     }
 }

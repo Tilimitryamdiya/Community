@@ -29,9 +29,9 @@ class AppAuth @Inject constructor(
 
     init {
         val token = prefs.getString(TOKEN_KEY, null)
-        val id = prefs.getLong(ID_KEY, 0L)
+        val id = prefs.getInt(ID_KEY, 0)
 
-        if (token == null || id == 0L) {
+        if (token == null || id == 0) {
             _authState = MutableStateFlow(AuthModel())
             prefs.edit { clear() }
         } else {
@@ -43,10 +43,10 @@ class AppAuth @Inject constructor(
     val authState = _authState.asStateFlow()
 
     @Synchronized
-    fun setAuth(id: Long, token: String?) {
+    fun setAuth(id: Int, token: String?) {
         _authState.value = AuthModel(id, token)
         prefs.edit {
-            putLong(ID_KEY, id)
+            putInt(ID_KEY, id)
             putString(TOKEN_KEY, token)
         }
         sendPushToken()

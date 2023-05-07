@@ -1,4 +1,4 @@
-package ru.netology.community.ui
+package ru.netology.community.ui.feed
 
 import android.content.Intent
 import android.os.Bundle
@@ -22,10 +22,6 @@ import ru.netology.community.viewmodel.PostViewModel
 
 class NewPostFragment: Fragment() {
 
-    companion object {
-        const val POST_ID = "POST_ID"
-    }
-
     private var _binding: FragmentNewPostBinding? = null
     private val binding get() = _binding!!
 
@@ -40,11 +36,19 @@ class NewPostFragment: Fragment() {
         _binding = FragmentNewPostBinding.inflate(inflater, container, false)
         binding.eventGroup.isVisible = false
 
-        arguments?.getInt(POST_ID)?.apply {
-            viewModel.getById(this)
-        }
-        viewModel.post.observe(viewLifecycleOwner) {
-            binding.editNewPost.setText(it?.content)
+        viewModel.getEditPost()?.let { post ->
+            binding.editNewPost.setText(post.content)
+            post.attachment?.let {
+                when (it.type) {
+                    AttachmentType.IMAGE -> {
+                        binding.textViewImage.text = it.url
+                    }
+                    AttachmentType.AUDIO -> {
+                        binding.textViewMusic.text = it.url
+                    }
+                    AttachmentType.VIDEO -> {}
+                }
+            }
         }
 
         imageLauncher =

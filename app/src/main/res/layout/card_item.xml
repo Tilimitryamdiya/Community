@@ -28,43 +28,49 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/author"
+        <LinearLayout
+            android:id="@+id/author_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/common_spacing"
-            android:ellipsize="end"
-            android:singleLine="true"
-            app:layout_constraintBottom_toTopOf="@id/author_job"
-            app:layout_constraintEnd_toStartOf="@id/menu"
-            app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintTop_toTopOf="@id/avatar"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="John Wick" />
-
-        <TextView
-            android:id="@+id/author_job"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/common_spacing"
-            android:ellipsize="end"
-            android:singleLine="true"
-            app:layout_constraintBottom_toTopOf="@id/published"
-            app:layout_constraintEnd_toStartOf="@id/menu"
-            app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Freelancer" />
-
-        <TextView
-            android:id="@+id/published"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/common_spacing"
-            android:textColor="@color/hint_color"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/avatar"
+            app:layout_constraintEnd_toStartOf="@id/menu"
             app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintTop_toBottomOf="@id/author_job"
-            tools:text="20 апреля 2023" />
+            app:layout_constraintTop_toTopOf="@id/avatar">
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_spacing"
+                android:ellipsize="end"
+                android:singleLine="true"
+                app:layout_constraintBottom_toTopOf="@id/author_job"
+                app:layout_constraintEnd_toStartOf="@id/menu"
+                app:layout_constraintStart_toEndOf="@id/avatar"
+                app:layout_constraintTop_toTopOf="@id/avatar"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="John Wick" />
+
+            <TextView
+                android:id="@+id/author_job"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_spacing"
+                android:ellipsize="end"
+                android:singleLine="true"
+                tools:text="Freelancer" />
+
+            <TextView
+                android:id="@+id/published"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/common_spacing"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/hint_color"
+                tools:text="20 апреля 2023" />
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/menu"
@@ -82,7 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="avatar, published, menu" />
+            app:constraint_referenced_ids="avatar, author_info, menu" />
 
         <ImageView
             android:id="@+id/event_date_icon"
@@ -142,13 +148,38 @@
             app:layout_constraintTop_toBottomOf="@id/type_of_event_icon"
             tools:text="@tools:sample/lorem[30]" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/play_button"
+            style="@style/Widget.AppTheme.PlayPauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/content" />
+
+        <TextView
+            android:id="@+id/music_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/play_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/play_button"
+            app:layout_constraintTop_toTopOf="@id/play_button" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/music"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="play_button, music_title" />
+
         <ImageView
             android:id="@+id/attachment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/attachment"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/content" />
+            app:layout_constraintTop_toBottomOf="@id/play_button" />
 
         <ImageView
             android:id="@+id/image_pin"

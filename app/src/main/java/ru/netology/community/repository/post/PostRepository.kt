@@ -8,6 +8,7 @@ import ru.netology.community.model.MediaModel
 
 interface PostRepository  {
     val data: Flow<PagingData<FeedItem>>
+    fun userWall(id: Int): Flow<PagingData<FeedItem>>
     suspend fun likeById(post: Post)
     suspend fun save(post: Post)
     suspend fun saveWithAttachment(post: Post, media: MediaModel)

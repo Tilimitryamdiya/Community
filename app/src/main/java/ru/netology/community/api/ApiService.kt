@@ -127,4 +127,32 @@ interface ApiService {
     @GET("users/{id}")
     suspend fun getUserById(@Path("id") id: Int): Response<User>
 
+
+    //Jobs
+
+    @GET("{id}/jobs")
+    suspend fun getJobsByUserId(@Path("id") id: Int): Response<List<Job>>
+
+    @POST("my/jobs")
+    suspend fun saveJob(@Body job: Job): Response<Job>
+
+    @DELETE("my/jobs/{id}")
+    suspend fun removeJobById(@Path("id") id: Int): Response<Unit>
+
+
+    //Wall
+
+    @GET("{authorId}/wall/latest")
+    suspend fun wallGetLatest(
+        @Path("authorId") authorId: Int,
+        @Query("count") count: Int
+    ): Response<List<Post>>
+
+    @GET("{authorId}/wall/{postId}/before")
+    suspend fun wallGetBefore(
+        @Path("authorId") authorId: Int,
+        @Path("postId") postId: Int,
+        @Query("count") count: Int
+    ): Response<List<Post>>
+
 }

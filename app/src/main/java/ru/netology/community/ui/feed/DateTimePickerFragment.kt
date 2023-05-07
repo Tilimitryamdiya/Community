@@ -1,4 +1,4 @@
-package ru.netology.community.ui
+package ru.netology.community.ui.feed
 
 import android.app.DatePickerDialog
 import android.app.Dialog

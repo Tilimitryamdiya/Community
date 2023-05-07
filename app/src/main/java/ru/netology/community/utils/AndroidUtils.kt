@@ -1,11 +1,10 @@
 package ru.netology.community.utils
 
 import android.content.Context
-import android.icu.text.SimpleDateFormat
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 object AndroidUtils {
     fun hideKeyboard(view: View) {
@@ -13,9 +12,15 @@ object AndroidUtils {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun formatDateTime(value: String): String {
-        val date = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ROOT).parse(value)
-        val formatter = DateTimeFormatter.ISO_INSTANT
-        return formatter.format(date?.toInstant())
+    fun formatDateTime(date: String): String {
+        val parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+        return parsedDate.format(formatter)
+    }
+
+    fun formatDate(date: String): String {
+        val parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        return parsedDate.format(formatter)
     }
 }

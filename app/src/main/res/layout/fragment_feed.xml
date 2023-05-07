@@ -23,9 +23,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/common_spacing"
+        android:textSize="18sp"
         android:ellipsize="end"
         android:singleLine="true"
-        app:layout_constraintBottom_toTopOf="@id/owner_job"
+        app:layout_constraintBottom_toBottomOf="@id/owner_avatar"
         app:layout_constraintStart_toEndOf="@id/owner_avatar"
         app:layout_constraintTop_toTopOf="@id/owner_avatar"
         tools:text="John Wick" />
@@ -35,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        app:constraint_referenced_ids="owner_avatar, owner_name, owner_job" />
+        app:constraint_referenced_ids="owner_avatar, owner_name" />
 
     <ImageView
         android:id="@+id/menu_auth"
@@ -50,18 +51,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/owner_job"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/logOut"
+        android:layout_width="@dimen/icon_button_min_size"
+        android:layout_height="@dimen/icon_button_min_size"
         android:layout_marginHorizontal="@dimen/common_spacing"
-        android:ellipsize="end"
-        android:singleLine="true"
-        app:layout_constraintBottom_toBottomOf="@id/owner_avatar"
-        app:layout_constraintStart_toEndOf="@id/owner_avatar"
-        app:layout_constraintTop_toBottomOf="@id/owner_name"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="Freelancer" />
+        android:contentDescription="@string/users"
+        android:src="@drawable/logout"
+        app:layout_constraintEnd_toStartOf="@id/users"
+        app:layout_constraintTop_toTopOf="@id/users" />
 
     <ImageView
         android:id="@+id/users"

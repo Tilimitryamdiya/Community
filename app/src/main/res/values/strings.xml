@@ -60,5 +60,21 @@
     <string name="make_photo">Make a photo</string>
     <string name="open_gallery">Open gallery</string>
     <string name="clear">Clear</string>
-
+    <string name="position">Position</string>
+    <string name="works_at">Works at</string>
+    <string name="age">Age</string>
+    <string name="button_back">Button back</string>
+    <string name="log_out">Log out</string>
+    <string name="edit">Edit</string>
+    <string name="jobs">Jobs</string>
+    <string name="dash">–</string>
+    <string name="wall">Wall</string>
+    <string name="user">User</string>
+    <string name="empty_posts">There are no posts.\nIf you create a new post, it will appear here</string>
+    <string name="job">Job</string>
+    <string name="start">Start</string>
+    <string name="finish">Finish</string>
+    <string name="empty_datetime">Date and time can`t be empty</string>
+    <string name="add_job">Add job</string>
+    <string name="empty_jobs">No jobs added</string>
 </resources>

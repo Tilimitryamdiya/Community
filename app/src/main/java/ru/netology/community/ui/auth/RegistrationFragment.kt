@@ -1,4 +1,4 @@
-package ru.netology.community.ui
+package ru.netology.community.ui.auth
 
 import android.content.Intent
 import android.os.Bundle

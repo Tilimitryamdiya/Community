@@ -8,6 +8,8 @@ import ru.netology.community.repository.auth.AuthRepository
 import ru.netology.community.repository.auth.AuthRepositoryImpl
 import ru.netology.community.repository.event.EventRepository
 import ru.netology.community.repository.event.EventRepositoryImpl
+import ru.netology.community.repository.job.JobRepository
+import ru.netology.community.repository.job.JobRepositoryImpl
 import ru.netology.community.repository.post.PostRepository
 import ru.netology.community.repository.post.PostRepositoryImpl
 import ru.netology.community.repository.user.UserRepository
@@ -33,4 +35,8 @@ interface RepositoryModule {
     @Singleton
     @Binds
     fun bindsUserRepository(userRepository: UserRepositoryImpl): UserRepository
+
+    @Singleton
+    @Binds
+    fun bindsJobRepository(jobRepository: JobRepositoryImpl): JobRepository
 }

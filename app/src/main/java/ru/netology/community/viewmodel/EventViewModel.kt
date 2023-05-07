@@ -17,7 +17,6 @@ import ru.netology.community.enumeration.EventType
 import ru.netology.community.model.FeedModelState
 import ru.netology.community.model.MediaModel
 import ru.netology.community.repository.event.EventRepository
-import ru.netology.community.utils.AndroidUtils
 import ru.netology.community.utils.SingleLiveEvent
 import java.io.File
 import javax.inject.Inject
@@ -53,19 +52,13 @@ class EventViewModel @Inject constructor(
     val dataState: LiveData<FeedModelState>
         get() = _dataState
 
-    private val edited = MutableLiveData(empty)
+    private val _edited = MutableLiveData(empty)
+    val edited: LiveData<Event>
+    get() = _edited
 
     private val _media = MutableLiveData<MediaModel?>(null)
     val media: LiveData<MediaModel?>
         get() = _media
-
-    private val _date = MutableLiveData<String?>(null)
-    val date: LiveData<String?>
-        get() = _date
-
-    private val _time = MutableLiveData<String?>(null)
-    val time: LiveData<String?>
-        get() = _time
 
     private val _eventCreated = SingleLiveEvent<Unit>()
     val eventCreated: LiveData<Unit>
@@ -77,14 +70,6 @@ class EventViewModel @Inject constructor(
 
     fun clearPhoto() {
         _media.value = null
-    }
-
-    fun addDate(date: String) {
-        _date.value = date
-    }
-
-    fun addTime(time: String) {
-        _time.value = time
     }
 
     fun save() {
@@ -99,10 +84,8 @@ class EventViewModel @Inject constructor(
                             }
                         }
                         _eventCreated.value = Unit
-                        edited.value = empty
+                        clearEdited()
                         clearPhoto()
-                        _date.value = null
-                        _time.value = null
                         _dataState.value = FeedModelState()
                     } catch (e: Exception) {
                         _dataState.value = FeedModelState(error = true)
@@ -113,16 +96,17 @@ class EventViewModel @Inject constructor(
     }
 
     fun edit(event: Event) {
-        edited.value = event
+        _edited.value = event
     }
-
-    fun changeContent(content: String, eventType: EventType) {
+    fun clearEdited() {
+        _edited.value = empty
+    }
+    fun changeContent(
+        content: String,
+        datetime: String,
+        eventType: EventType) {
         val text = content.trim()
-        val datetime = AndroidUtils.formatDateTime("${date.value} ${time.value}")
-        if (edited.value?.content == text) {
-            return
-        }
-        edited.value = edited.value?.copy(content = text, datetime = datetime, type = eventType)
+        _edited.value = edited.value?.copy(content = text, datetime = datetime, type = eventType)
     }
 
     fun likeById(event: Event) {
@@ -147,15 +131,4 @@ class EventViewModel @Inject constructor(
             }
         }
     }
-
-    private val _event = MutableLiveData<Event?>(null)
-    val event: LiveData<Event?>
-        get() = _event
-
-    fun getById(id: Int) {
-        viewModelScope.launch {
-            _event.value = repository.getById(id)
-        }
-    }
-
 }

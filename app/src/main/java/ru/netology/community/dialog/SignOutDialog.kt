@@ -6,16 +6,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import ru.netology.community.R
 
-class SignOutDialog : DialogFragment() {
+class SignOutDialog (private val listener: ConfirmationListener) : DialogFragment() {
 
     interface ConfirmationListener {
         fun confirmButtonClicked()
     }
 
-    private lateinit var listener: ConfirmationListener
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        listener = activity as ConfirmationListener
 
         return AlertDialog.Builder(requireContext())
             .setMessage(R.string.confirm_signOut)
@@ -25,7 +22,6 @@ class SignOutDialog : DialogFragment() {
             .setNegativeButton(R.string.cancel, null)
             .create()
     }
-
 
     companion object {
         const val TAG = "SignOutDialog"

@@ -67,6 +67,7 @@ dependencies {
     def paging_version = "3.1.1"
     def glide_version = "4.15.0"
     def imagepicker_version = "2.1"
+    def swipe_refresh_version = "1.1.0"
 
     implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
@@ -77,7 +78,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "com.google.code.gson:gson:$gson_version"
-
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version"
 
 
     //  Navigation

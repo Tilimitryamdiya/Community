@@ -12,7 +12,9 @@ import ru.netology.community.R
 import ru.netology.community.databinding.CardItemBinding
 import ru.netology.community.dto.Event
 import ru.netology.community.dto.FeedItem
+import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.enumeration.EventType
+import ru.netology.community.utils.AndroidUtils
 import ru.netology.community.view.load
 import ru.netology.community.view.loadAttachment
 
@@ -58,8 +60,9 @@ class FeedViewHolder(
             feedItem.authorAvatar?.let { avatar.load(it) }
                 ?: avatar.setImageResource(R.drawable.no_avatar)
             author.text = feedItem.author
+            authorJob.isVisible = feedItem.authorJob != null
             authorJob.text = feedItem.authorJob
-            published.text = feedItem.published
+            published.text = AndroidUtils.formatDateTime(feedItem.published)
             content.text = feedItem.content
 
             like.isChecked = feedItem.likedByMe
@@ -74,7 +77,7 @@ class FeedViewHolder(
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             R.id.delete -> {
-                                listener.onRemove(feedItem)
+                                listener.onRemove(feedItem.id)
                                 true
                             }
                             R.id.edit -> {
@@ -87,16 +90,27 @@ class FeedViewHolder(
                 }.show()
             }
 
+            attachment.visibility = View.GONE
+            music.visibility = View.GONE
             if (feedItem.attachment != null) {
-                attachment.visibility = View.VISIBLE
-                attachment.loadAttachment(feedItem.attachment!!.url)
-            } else {
-                attachment.visibility = View.GONE
+                when (feedItem.attachment?.type) {
+                    AttachmentType.AUDIO -> {
+                        music.visibility = View.VISIBLE
+                        binding.playButton.setOnClickListener { listener.onPlayPause(feedItem) }
+                        binding.musicTitle.text = feedItem.attachment?.url
+                    }
+                    AttachmentType.IMAGE -> {
+                        attachment.visibility = View.VISIBLE
+                        attachment.loadAttachment(feedItem.attachment!!.url)
+                    }
+                    AttachmentType.VIDEO -> {}
+                    else -> {}
+                }
             }
 
             if (feedItem is Event) {
                 eventGroup.visibility = View.VISIBLE
-                eventDate.text = feedItem.datetime
+                eventDate.text = AndroidUtils.formatDateTime(feedItem.datetime)
                 eventType.text = feedItem.type.toString()
                 when (feedItem.type) {
                     EventType.ONLINE -> typeOfEventIcon.setImageResource(R.drawable.online_event)
@@ -105,7 +119,12 @@ class FeedViewHolder(
             } else {
                 eventGroup.visibility = View.GONE
             }
+
+            avatar.setOnClickListener {
+                listener.onUser(feedItem.authorId)
+            }
         }
+
     }
 
     fun bind(payload: Payload) {
@@ -140,7 +159,8 @@ class FeedDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
 
 interface OnInteractionListener {
     fun onLike(feedItem: FeedItem)
-    fun onRemove(feedItem: FeedItem)
-
+    fun onRemove(id: Int)
     fun onEdit(feedItem: FeedItem)
+    fun onUser(userId: Int)
+    fun onPlayPause(feedItem: FeedItem)
 }
