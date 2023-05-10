@@ -10,6 +10,7 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.netology.community.dto.Coordinates
 import ru.netology.community.dto.Event
 import ru.netology.community.dto.FeedItem
 import ru.netology.community.enumeration.AttachmentType
@@ -64,11 +65,11 @@ class EventViewModel @Inject constructor(
     val eventCreated: LiveData<Unit>
         get() = _eventCreated
 
-    fun addPhoto(uri: Uri, file: File, type: AttachmentType) {
+    fun addMedia(uri: Uri, file: File, type: AttachmentType) {
         _media.value = MediaModel(uri, file, type)
     }
 
-    fun clearPhoto() {
+    fun clearMedia() {
         _media.value = null
     }
 
@@ -85,7 +86,7 @@ class EventViewModel @Inject constructor(
                         }
                         _eventCreated.value = Unit
                         clearEdited()
-                        clearPhoto()
+                        clearMedia()
                         _dataState.value = FeedModelState()
                     } catch (e: Exception) {
                         _dataState.value = FeedModelState(error = true)
@@ -101,6 +102,23 @@ class EventViewModel @Inject constructor(
     fun clearEdited() {
         _edited.value = empty
     }
+
+    fun getEditEvent(): Event? {
+        return if (edited.value == null || edited.value == empty) null else edited.value
+    }
+
+    fun addCoordinates(coords: Coordinates) {
+        viewModelScope.launch {
+            _edited.value = _edited.value?.copy(coords = coords)
+        }
+    }
+
+    fun clearCoordinates() {
+        viewModelScope.launch {
+            _edited.value = _edited.value?.copy(coords = null)
+        }
+    }
+
     fun changeContent(
         content: String,
         datetime: String,

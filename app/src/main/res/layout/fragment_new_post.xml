@@ -10,13 +10,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/close_button"
+            android:padding="@dimen/common_spacing"
+            android:src="@drawable/back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <RadioGroup
             android:id="@+id/type_event_radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/back">
 
             <RadioButton
                 android:id="@+id/type_online"
@@ -44,7 +56,7 @@
             android:layout_height="wrap_content"
             android:text="@string/add_date"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/type_event_radioGroup" />
+            app:layout_constraintTop_toBottomOf="@id/back" />
 
         <TextView
             android:id="@+id/textView_date"
@@ -176,7 +188,18 @@
             app:layout_constraintTop_toBottomOf="@id/add_music_button" />
 
         <TextView
-            android:id="@+id/textView_coordinates"
+            android:id="@+id/textView_lat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintEnd_toStartOf="@id/clear_coordinates"
+            app:layout_constraintStart_toStartOf="@id/textView_image"
+            app:layout_constraintTop_toTopOf="@id/add_place_button"
+            tools:text="lat" />
+
+        <TextView
+            android:id="@+id/textView_long"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -184,8 +207,7 @@
             app:layout_constraintBottom_toBottomOf="@id/add_place_button"
             app:layout_constraintEnd_toStartOf="@id/clear_coordinates"
             app:layout_constraintStart_toStartOf="@id/textView_image"
-            app:layout_constraintTop_toTopOf="@id/add_place_button"
-            tools:text="coordinates" />
+            tools:text="long"/>
 
         <TextView
             android:id="@+id/clear_coordinates"
@@ -195,9 +217,9 @@
             android:padding="@dimen/common_spacing"
             android:text="@string/clear"
             android:textColor="@color/color_primary"
-            app:layout_constraintBottom_toBottomOf="@id/textView_coordinates"
+            app:layout_constraintBottom_toBottomOf="@id/textView_long"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textView_coordinates" />
+            app:layout_constraintTop_toTopOf="@id/textView_lat" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/add_link_button"

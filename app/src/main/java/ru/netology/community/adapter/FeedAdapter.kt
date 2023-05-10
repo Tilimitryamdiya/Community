@@ -1,5 +1,6 @@
 package ru.netology.community.adapter
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,23 +91,49 @@ class FeedViewHolder(
                 }.show()
             }
 
-            attachment.visibility = View.GONE
+            attachmentImage.visibility = View.GONE
             music.visibility = View.GONE
+            attachmentVideo.visibility = View.GONE
             if (feedItem.attachment != null) {
                 when (feedItem.attachment?.type) {
                     AttachmentType.AUDIO -> {
                         music.visibility = View.VISIBLE
-                        binding.playButton.setOnClickListener { listener.onPlayPause(feedItem) }
-                        binding.musicTitle.text = feedItem.attachment?.url
+                        playButton.setOnClickListener { listener.onPlayPause(feedItem) }
+                        musicTitle.text = feedItem.attachment?.url
                     }
                     AttachmentType.IMAGE -> {
-                        attachment.visibility = View.VISIBLE
-                        attachment.loadAttachment(feedItem.attachment!!.url)
+                        attachmentImage.visibility = View.VISIBLE
+                        attachmentImage.loadAttachment(feedItem.attachment!!.url)
                     }
-                    AttachmentType.VIDEO -> {}
-                    else -> {}
+                    AttachmentType.VIDEO -> {
+                        attachmentVideo.visibility = View.VISIBLE
+                        feedItem.attachment?.url.let {
+                            attachmentVideo.setOnClickListener { listener.onVideo(feedItem.attachment!!.url) }
+                            val uri = Uri.parse(it)
+                            attachmentVideo.setVideoURI(uri)
+                            attachmentVideo.setOnPreparedListener { mp ->
+                                mp?.setVolume(0F, 0F)
+                                mp?.isLooping = true
+                                attachmentVideo.start()
+                            }
+                        }
+                    }
+                    else -> Unit
                 }
             }
+
+            coordinates.isVisible = feedItem.coords != null
+            feedItem.coords?.let { coords ->
+                coordinates.setOnClickListener {
+                    listener.onCoordinates(
+                        coords.lat.toDouble(),
+                        coords.lat.toDouble()
+                    )
+                }
+            }
+
+            link.isVisible = feedItem.link != null
+            link.text = feedItem.link
 
             if (feedItem is Event) {
                 eventGroup.visibility = View.VISIBLE
@@ -163,4 +190,6 @@ interface OnInteractionListener {
     fun onEdit(feedItem: FeedItem)
     fun onUser(userId: Int)
     fun onPlayPause(feedItem: FeedItem)
+    fun onCoordinates(lat: Double, long: Double)
+    fun onVideo(url: String)
 }

@@ -10,6 +10,7 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import ru.netology.community.dto.Coordinates
 import ru.netology.community.dto.FeedItem
 import ru.netology.community.dto.Post
 import ru.netology.community.enumeration.AttachmentType
@@ -51,7 +52,9 @@ class PostViewModel @Inject constructor(
     val dataState: LiveData<FeedModelState>
         get() = _dataState
 
-    private val edited = MutableLiveData(empty)
+    private val _edited = MutableLiveData(empty)
+    val edited: LiveData<Post>
+        get() = _edited
 
     private val _media = MutableLiveData<MediaModel?>(null)
     val media: LiveData<MediaModel?>
@@ -61,11 +64,11 @@ class PostViewModel @Inject constructor(
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
-    fun addPhoto(uri: Uri, file: File, type: AttachmentType) {
+    fun addMedia(uri: Uri, file: File, type: AttachmentType) {
         _media.value = MediaModel(uri, file, type)
     }
 
-    fun clearPhoto() {
+    fun clearMedia() {
         _media.value = null
     }
 
@@ -81,8 +84,8 @@ class PostViewModel @Inject constructor(
                             }
                         }
                         _postCreated.value = Unit
-                        edited.value = empty
-                        clearPhoto()
+                        clearEdited()
+                        clearMedia()
                         _dataState.value = FeedModelState()
                     } catch (e: Exception) {
                         _dataState.value = FeedModelState(error = true)
@@ -93,20 +96,35 @@ class PostViewModel @Inject constructor(
     }
 
     fun edit(post: Post) {
-        edited.value = post
+        _edited.value = post
     }
-    fun clearEdited() {
-        edited.value = null
-    }
-    fun getEditPost() = edited.value
 
+    fun clearEdited() {
+        _edited.value = empty
+    }
+
+    fun getEditPost(): Post? {
+        return if (edited.value == null || edited.value == empty) null else edited.value
+    }
+
+    fun addCoordinates(coords: Coordinates) {
+        viewModelScope.launch {
+            _edited.value = _edited.value?.copy(coords = coords)
+        }
+    }
+
+    fun clearCoordinates() {
+        viewModelScope.launch {
+            _edited.value = _edited.value?.copy(coords = null)
+        }
+    }
 
     fun changeContent(content: String) {
         val text = content.trim()
         if (edited.value?.content == text) {
             return
         }
-        edited.value = edited.value?.copy(content = text)
+        _edited.value = edited.value?.copy(content = text)
     }
 
     fun likeById(post: Post) {
@@ -129,6 +147,13 @@ class PostViewModel @Inject constructor(
             } catch (e: Exception) {
                 _dataState.value = FeedModelState(error = true)
             }
+        }
+    }
+
+    fun wallRemoveById(id: Int) {
+        removeById(id)
+        viewModelScope.launch {
+            repository.wallRemoveById(id)
         }
     }
 }

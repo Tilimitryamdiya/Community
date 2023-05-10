@@ -14,18 +14,30 @@
     <string name="menu_delete">Delete</string>
 
 
-    <!--    Create post/event   -->
-    <string name="add_image">Add Image</string>
-    <string name="add_music">Add Music</string>
-    <string name="add_place">Add Place</string>
+    <!--    Post/event   -->
+    <string name="add_image">Image</string>
+    <string name="add_music">Music</string>
+    <string name="add_place">Place</string>
+    <string name="add_link">Link</string>
+    <string name="add_date">Date</string>
+    <string name="add_time">Time</string>
     <string name="create_post">Create</string>
     <string name="avatar">Avatar</string>
     <string name="users">Users</string>
+    <string name="empty_datetime">Date and time can`t be empty</string>
     <string name="add_new_post">Add new post</string>
     <string name="attachment">Attachment</string>
     <string name="type_of_event">Type of event</string>
     <string name="date_of_event">Date of event</string>
     <string name="location">Location</string>
+    <string name="posts">Posts</string>
+    <string name="events">Events</string>
+    <string name="add_post">Add post</string>
+    <string name="add_event">Add event</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="clear">Clear</string>
+    <string name="position">Position</string>
 
     <!-- Authorization, registration -->
     <string name="greeting">Hi! \n Let`s get started! \n Join COMMUNITY!</string>
@@ -36,6 +48,8 @@
     <string name="invalidAuth">Invalid login/password</string>
     <string name="blankAuth">Login or password is blank</string>
     <string name="confirm_signOut">Are you sure?</string>
+    <string name="make_photo">Make a photo</string>
+    <string name="open_gallery">Open gallery</string>
     <string name="name">Name</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
@@ -48,33 +62,31 @@
     <string name="description_make_photo">Make a photo</string>
     <string name="close_button">Close button</string>
     <string name="authorization">Authorization</string>
-    <string name="posts">Posts</string>
-    <string name="events">Events</string>
-    <string name="add_post">Add post</string>
-    <string name="add_event">Add event</string>
-    <string name="online">Online</string>
-    <string name="offline">Offline</string>
-    <string name="add_link">Add link</string>
-    <string name="add_date">Add date</string>
-    <string name="add_time">Add time</string>
-    <string name="make_photo">Make a photo</string>
-    <string name="open_gallery">Open gallery</string>
-    <string name="clear">Clear</string>
-    <string name="position">Position</string>
-    <string name="works_at">Works at</string>
-    <string name="age">Age</string>
     <string name="button_back">Button back</string>
     <string name="log_out">Log out</string>
-    <string name="edit">Edit</string>
-    <string name="jobs">Jobs</string>
-    <string name="dash">–</string>
-    <string name="wall">Wall</string>
-    <string name="user">User</string>
+
+    <!--  Job  -->
     <string name="empty_posts">There are no posts.\nIf you create a new post, it will appear here</string>
     <string name="job">Job</string>
     <string name="start">Start</string>
     <string name="finish">Finish</string>
-    <string name="empty_datetime">Date and time can`t be empty</string>
+    <string name="jobs">Jobs</string>
+    <string name="dash">–</string>
     <string name="add_job">Add job</string>
     <string name="empty_jobs">No jobs added</string>
+
+    <!-- Maps -->
+    <string name="permission_request">Location permission required</string>
+    <string name="latitude">latitude:</string>
+    <string name="longitude">longitude:</string>
+    <string name="user_location">User location</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
+    <string name="place_pin">Place pin</string>
+    <string name="coordinates">Coordinates</string>
+    <string name="latitude_and_longitude">latitude: %s\nlongitude: %s</string>
+
+    <string name="edit">Edit</string>
+    <string name="wall">Wall</string>
+    <string name="user">User</string>
 </resources>

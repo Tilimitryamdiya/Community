@@ -84,7 +84,13 @@ class JobViewModel @Inject constructor(
         edited.value = job
     }
 
-    fun getEditJob() = edited.value
+    fun getEditJob(): Job? {
+        return if (edited.value == null || edited.value == empty) null else edited.value
+    }
+
+    fun clearEdited() {
+        edited.value = empty
+    }
 
     fun changeContent(
         name: String,

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/common_spacing"
     android:layout_marginBottom="@dimen/common_spacing"
-    app:cardElevation="@dimen/card_elevation">
+    app:cardElevation="@dimen/elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,6 +23,7 @@
             android:background="@drawable/card_line"
             android:contentDescription="@string/description_post_author_avatar"
             android:padding="@dimen/padding_frame_avatar"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@id/header"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -174,47 +175,33 @@
             app:constraint_referenced_ids="play_button, music_title" />
 
         <ImageView
-            android:id="@+id/attachment"
+            android:id="@+id/attachment_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/attachment_height"
             android:contentDescription="@string/attachment"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/play_button" />
 
-        <ImageView
-            android:id="@+id/image_pin"
-            android:layout_width="@dimen/icon_button_min_size"
-            android:layout_height="@dimen/icon_button_min_size"
-            android:contentDescription="@string/location"
-            android:src="@drawable/pin"
-            app:layout_constraintBottom_toBottomOf="@id/place"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/place" />
+        <VideoView
+            android:id="@+id/attachment_video"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/attachment_height"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/attachment_image" />
 
         <TextView
-            android:id="@+id/place"
-            android:layout_width="wrap_content"
+            android:id="@+id/link"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dimen_to_barrier"
-            app:layout_constraintStart_toEndOf="@id/image_pin"
-            app:layout_constraintTop_toBottomOf="@id/attachment"
-            tools:text="Moscow" />
-
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/place_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:constraint_referenced_ids="image_pin, place" />
+            android:autoLink="web"
+            app:layout_constraintTop_toBottomOf="@id/attachment_video" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/footer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="place" />
-
+            app:constraint_referenced_ids="link" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/like"
@@ -225,8 +212,18 @@
             android:contentDescription="@string/description_like_button"
             android:paddingVertical="@dimen/dimen_to_barrier"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/footer" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/coordinates"
+            style="@style/Widget.AppTheme.Buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/location"
+            app:icon="@drawable/place"
             app:layout_constraintTop_toBottomOf="@id/footer"
-            app:srcCompat="@drawable/like_selector" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

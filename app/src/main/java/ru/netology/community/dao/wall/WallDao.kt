@@ -28,4 +28,6 @@ interface WallDao {
     @Query("DELETE FROM WallEntity")
     suspend fun removeAll()
 
+    @Query("DELETE FROM WallEntity WHERE id = :id")
+    suspend fun removeById(id: Int)
 }

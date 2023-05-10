@@ -6,9 +6,10 @@
     <dimen name="dimen_to_barrier">8dp</dimen>
     <dimen name="post_avatar_small">48dp</dimen>
     <dimen name="icon_button_min_size">24dp</dimen>
-    <dimen name="card_elevation">8dp</dimen>
+    <dimen name="elevation">8dp</dimen>
     <dimen name="edit_text_height">45dp</dimen>
     <dimen name="greeting_card_margin">36dp</dimen>
     <dimen name="new_post_editText_height">200dp</dimen>
     <dimen name="avatar_profile_size">90dp</dimen>
+    <dimen name="attachment_height">200dp</dimen>
 </resources>

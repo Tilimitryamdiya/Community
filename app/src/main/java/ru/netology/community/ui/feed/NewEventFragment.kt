@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,9 +19,9 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.community.R
 import ru.netology.community.databinding.FragmentNewPostBinding
-import ru.netology.community.dto.Event
 import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.enumeration.EventType
+import ru.netology.community.ui.map.MapFragment
 import ru.netology.community.utils.AndroidUtils
 import ru.netology.community.viewmodel.EventViewModel
 import java.util.*
@@ -32,6 +34,13 @@ class NewEventFragment : Fragment() {
     private val viewModel: EventViewModel by activityViewModels()
     private var imageLauncher: ActivityResultLauncher<Intent>? = null
 
+    private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            viewModel.clearEdited()
+            findNavController().navigateUp()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,18 +49,20 @@ class NewEventFragment : Fragment() {
         _binding = FragmentNewPostBinding.inflate(inflater, container, false)
         binding.eventGroup.isVisible = true
 
-        var event: Event? = null
-        viewModel.edited.observe(viewLifecycleOwner) {
-            if (it?.content != "") {
-                event = it
-                binding.editNewPost.setText(it.content)
-                binding.textViewDate.text = AndroidUtils.formatDateTime(it.datetime)
-                if (it.type == EventType.OFFLINE) {
-                    binding.typeOffline.isChecked
-                } else {
-                    binding.typeOnline.isChecked
-                }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+
+        val event = viewModel.getEditEvent()
+        event?.let {
+            binding.editNewPost.setText(it.content)
+            binding.textViewDate.text = AndroidUtils.formatDate(it.datetime)
+            binding.textViewTime.text = AndroidUtils.formatTime(it.datetime)
+            if (it.type == EventType.OFFLINE) {
+                binding.typeOffline.isChecked
+            } else {
+                binding.typeOnline.isChecked
             }
+            binding.textViewLat.text = it.coords?.lat
+            binding.textViewLong.text = it.coords?.long
         }
 
         imageLauncher =
@@ -63,7 +74,7 @@ class NewEventFragment : Fragment() {
                     }
                     else -> {
                         val uri = it.data?.data ?: return@registerForActivityResult
-                        viewModel.addPhoto(uri, uri.toFile(), AttachmentType.IMAGE)
+                        viewModel.addMedia(uri, uri.toFile(), AttachmentType.IMAGE)
                     }
                 }
             }
@@ -139,12 +150,36 @@ class NewEventFragment : Fragment() {
         }
 
         binding.clearImage.setOnClickListener {
-            viewModel.clearPhoto()
+            viewModel.clearMedia()
         }
 
         viewModel.media.observe(viewLifecycleOwner) { media ->
             binding.clearImage.isVisible = media != null
             binding.textViewImage.text = media?.file?.name
+        }
+
+        binding.addPlaceButton.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_newEventFragment_to_mapFragment,
+                bundleOf(
+                    MapFragment.ITEM_TYPE to MapFragment.Companion.ItemType.EVENT.name
+                )
+            )
+        }
+
+        viewModel.edited.observe(viewLifecycleOwner) {
+            binding.textViewLat.text = it.coords?.lat ?: ""
+            binding.textViewLong.text = it.coords?.long ?: ""
+            binding.clearCoordinates.isVisible = it.coords != null
+        }
+
+        binding.clearCoordinates.setOnClickListener {
+            viewModel.clearCoordinates()
+        }
+
+        binding.back.setOnClickListener {
+            viewModel.clearEdited()
+            findNavController().navigateUp()
         }
 
         return binding.root

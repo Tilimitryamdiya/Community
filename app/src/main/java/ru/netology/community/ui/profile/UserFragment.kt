@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -22,6 +23,8 @@ import ru.netology.community.dto.FeedItem
 import ru.netology.community.dto.Post
 import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.ui.MediaLifecycleObserver
+import ru.netology.community.ui.attachment.VideoFragment
+import ru.netology.community.ui.map.MapFragment
 import ru.netology.community.view.load
 import ru.netology.community.viewmodel.JobViewModel
 import ru.netology.community.viewmodel.PostViewModel
@@ -89,7 +92,7 @@ class UserFragment : Fragment() {
             }
 
             override fun onRemove(id: Int) {
-                postViewModel.removeById(id)
+                postViewModel.wallRemoveById(id)
             }
 
             override fun onEdit(feedItem: FeedItem) {
@@ -104,6 +107,25 @@ class UserFragment : Fragment() {
                     feedItem.attachment?.url?.let { mediaObserver.playPause(it) }
                 }
             }
+
+            override fun onCoordinates(lat: Double, long: Double) {
+                findNavController().navigate(
+                    R.id.action_userFragment_to_mapFragment,
+                    bundleOf(
+                        MapFragment.LAT_KEY to lat,
+                        MapFragment.LONG_KEY to long
+                    )
+                )
+            }
+
+            override fun onVideo(url: String) {
+                findNavController().navigate(
+                    R.id.action_userFragment_to_videoFragment,
+                    bundleOf(
+                        VideoFragment.URL to url
+                    )
+                )
+            }
         })
         binding.listContainer.adapter = adapter
 
@@ -116,11 +138,23 @@ class UserFragment : Fragment() {
         }
 
         userViewModel.userDataState.observe(viewLifecycleOwner) { state ->
+            binding.swiperefresh.isRefreshing = state.refreshing
             if (state.error) {
                 Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
                     .show()
             }
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                adapter.loadStateFlow.collectLatest { state ->
+                    binding.swiperefresh.isRefreshing =
+                        state.refresh is LoadState.Loading
+                }
+            }
+        }
+
+        binding.swiperefresh.setOnRefreshListener(adapter::refresh)
 
         mediaObserver.player?.setOnCompletionListener {
             mediaObserver.player?.stop()

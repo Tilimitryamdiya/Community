@@ -5,7 +5,4 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.community.R
 
 @AndroidEntryPoint
-class AppActivity : AppCompatActivity(R.layout.activity_app) {
-
-
-}
+class AppActivity : AppCompatActivity(R.layout.activity_app)

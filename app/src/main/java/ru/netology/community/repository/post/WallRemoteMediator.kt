@@ -25,10 +25,19 @@ class WallRemoteMediator @Inject constructor(
     val authorId: Int
 ) : RemoteMediator<Int, WallEntity>() {
 
+    private var id = 0
+
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, WallEntity>
     ): MediatorResult {
+
+        if (authorId != id) {
+            wallRemoteKeyDao.removeAll()
+            wallDao.removeAll()
+        }
+        id = authorId
+
         try {
             val response = when (loadType) {
                 LoadType.REFRESH -> {

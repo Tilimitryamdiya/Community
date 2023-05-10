@@ -154,4 +154,6 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun getById(id: Int): Post? =
         postDao.getPostById(id)?.toDto()
+
+    override suspend fun wallRemoveById(id: Int) = wallDao.removeById(id)
 }

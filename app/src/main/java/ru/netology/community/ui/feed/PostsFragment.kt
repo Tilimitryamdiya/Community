@@ -24,6 +24,8 @@ import ru.netology.community.dto.FeedItem
 import ru.netology.community.dto.Post
 import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.ui.MediaLifecycleObserver
+import ru.netology.community.ui.attachment.VideoFragment
+import ru.netology.community.ui.map.MapFragment
 import ru.netology.community.ui.profile.UserFragment
 import ru.netology.community.viewmodel.PostViewModel
 
@@ -69,6 +71,25 @@ class PostsFragment : Fragment() {
                 if (feedItem.attachment?.type == AttachmentType.AUDIO) {
                     feedItem.attachment?.url?.let { mediaObserver.playPause(it) }
                 }
+            }
+
+            override fun onCoordinates(lat: Double, long: Double) {
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_mapFragment,
+                    bundleOf(
+                        MapFragment.LAT_KEY to lat,
+                        MapFragment.LONG_KEY to long
+                    )
+                )
+            }
+
+            override fun onVideo(url: String) {
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_videoFragment,
+                    bundleOf(
+                        VideoFragment.URL to url
+                    )
+                )
             }
         })
 

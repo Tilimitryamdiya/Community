@@ -12,7 +12,8 @@ fun ImageView.load(url: String) =
         .timeout(10_000)
         .into(this)
 
-fun ImageView.loadAttachment(url: String) = Glide.with(this)
+fun ImageView.loadAttachment(url: String) =
+    Glide.with(this)
     .load(url)
     .timeout(10_000)
     .into(this)

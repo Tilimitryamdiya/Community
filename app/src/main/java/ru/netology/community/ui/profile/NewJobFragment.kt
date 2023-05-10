@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -21,6 +22,13 @@ class NewJobFragment : Fragment() {
 
     private val viewModel: JobViewModel by activityViewModels()
 
+    private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            viewModel.clearEdited()
+            findNavController().navigateUp()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,11 +36,18 @@ class NewJobFragment : Fragment() {
     ): View {
         _binding = FragmentNewJobBinding.inflate(inflater, container, false)
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+
+        binding.back.setOnClickListener {
+            viewModel.clearEdited()
+            findNavController().navigateUp()
+        }
+
         viewModel.getEditJob()?.apply {
             binding.jobName.setText(this.name)
             binding.jobPosition.setText(this.position)
-            binding.jobStart.setText(this.start)
-            binding.jobFinish.setText(this.finish)
+            binding.jobStart.text = AndroidUtils.formatDate(this.start)
+            binding.jobFinish.text = this.finish?.let { AndroidUtils.formatDate(it) } ?: ""
         }
 
         binding.jobStart.setOnClickListener {
@@ -46,7 +61,7 @@ class NewJobFragment : Fragment() {
                         "yyyy-MM-dd",
                         Locale.getDefault()
                     ).format(selectedDate.time)
-                    binding.jobStart.setText(date)
+                    binding.jobStart.text = date
                 }
             datePickerFragment.show(childFragmentManager, "datePicker")
         }
@@ -62,7 +77,7 @@ class NewJobFragment : Fragment() {
                         "yyyy-MM-dd",
                         Locale.getDefault()
                     ).format(selectedDate.time)
-                    binding.jobFinish.setText(date)
+                    binding.jobFinish.text = date
                 }
             datePickerFragment.show(childFragmentManager, "datePicker")
         }
