@@ -70,6 +70,7 @@ class PostViewModel @Inject constructor(
 
     fun clearMedia() {
         _media.value = null
+        _edited.value = _edited.value?.copy(attachment = null)
     }
 
     fun save() {
@@ -119,12 +120,9 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun changeContent(content: String) {
+    fun changeContent(content: String, link: String?) {
         val text = content.trim()
-        if (edited.value?.content == text) {
-            return
-        }
-        _edited.value = edited.value?.copy(content = text)
+        _edited.value = edited.value?.copy(content = text, link = link)
     }
 
     fun likeById(post: Post) {

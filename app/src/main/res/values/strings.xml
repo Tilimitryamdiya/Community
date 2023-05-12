@@ -16,8 +16,10 @@
 
     <!--    Post/event   -->
     <string name="add_image">Image</string>
+    <string name="clear_image">Clear Image</string>
     <string name="add_music">Music</string>
     <string name="add_place">Place</string>
+    <string name="clear_coordinates">Clear coordinates</string>
     <string name="add_link">Link</string>
     <string name="add_date">Date</string>
     <string name="add_time">Time</string>
@@ -45,7 +47,7 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
     <string name="join">Join</string>
-    <string name="invalidAuth">Invalid login/password</string>
+    <string name="invalid_auth">Invalid login/password</string>
     <string name="blankAuth">Login or password is blank</string>
     <string name="confirm_signOut">Are you sure?</string>
     <string name="make_photo">Make a photo</string>
@@ -89,4 +91,7 @@
     <string name="edit">Edit</string>
     <string name="wall">Wall</string>
     <string name="user">User</string>
+    <string name="description_full_screen_image">Full screen image</string>
+    <string name="link">Link</string>
+    <string name="invalid_link">Invalid link</string>
 </resources>

@@ -1,8 +1,10 @@
 package ru.netology.community.utils
 
 import android.content.Context
+import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -28,5 +30,16 @@ object AndroidUtils {
         val parsedDate = LocalDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME)
         val formatter = DateTimeFormatter.ofPattern("HH:mm")
         return parsedDate.format(formatter)
+    }
+
+    fun dateToTimestamp(datetime: String) = Instant.parse(datetime).toEpochMilli()
+
+    fun checkLink(link: String): String? {
+        if (link.trim().isBlank()) return null
+        return if (Patterns.WEB_URL.matcher(link.trim()).matches()) {
+            link.trim()
+        } else {
+            ""
+        }
     }
 }

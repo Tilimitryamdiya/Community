@@ -103,13 +103,17 @@ class FeedViewHolder(
                     }
                     AttachmentType.IMAGE -> {
                         attachmentImage.visibility = View.VISIBLE
-                        attachmentImage.loadAttachment(feedItem.attachment!!.url)
+                        feedItem.attachment?.url?.let { url ->
+                            attachmentImage.loadAttachment(url)
+                            attachmentImage.setOnClickListener { listener.onImage(url) }
+                        }
+
                     }
                     AttachmentType.VIDEO -> {
                         attachmentVideo.visibility = View.VISIBLE
-                        feedItem.attachment?.url.let {
-                            attachmentVideo.setOnClickListener { listener.onVideo(feedItem.attachment!!.url) }
-                            val uri = Uri.parse(it)
+                        feedItem.attachment?.url?.let { url ->
+                            attachmentVideo.setOnClickListener { listener.onVideo(url) }
+                            val uri = Uri.parse(url)
                             attachmentVideo.setVideoURI(uri)
                             attachmentVideo.setOnPreparedListener { mp ->
                                 mp?.setVolume(0F, 0F)
@@ -192,4 +196,5 @@ interface OnInteractionListener {
     fun onPlayPause(feedItem: FeedItem)
     fun onCoordinates(lat: Double, long: Double)
     fun onVideo(url: String)
+    fun onImage(url: String)
 }

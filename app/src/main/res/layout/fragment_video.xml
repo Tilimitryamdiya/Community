@@ -9,5 +9,12 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"/>
 
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/button_back"
+        android:padding="@dimen/dimen_to_barrier"
+        android:src="@drawable/back" />
 
 </RelativeLayout>

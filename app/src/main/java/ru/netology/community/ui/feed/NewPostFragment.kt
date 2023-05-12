@@ -46,25 +46,52 @@ class NewPostFragment: Fragment() {
         _binding = FragmentNewPostBinding.inflate(inflater, container, false)
         binding.eventGroup.isVisible = false
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
 
         viewModel.getEditPost()?.let { post ->
             binding.editNewPost.setText(post.content)
-            post.attachment?.let {
-                when (it.type) {
-                    AttachmentType.IMAGE -> {
-                        binding.textViewImage.text = it.url
-                    }
-                    AttachmentType.AUDIO -> {
-                        binding.textViewMusic.text = it.url
-                    }
-                    AttachmentType.VIDEO -> {}
-                }
+            binding.editTextLink.setText(post.link)
+            if (post.attachment?.type == AttachmentType.IMAGE) {
+                binding.textViewImage.text = post.attachment.url
             }
-            binding.textViewLat.text = post.coords?.lat
-            binding.textViewLong.text = post.coords?.long
         }
 
+        viewModel.edited.observe(viewLifecycleOwner) {
+            binding.textViewLat.text = it.coords?.lat ?: ""
+            binding.textViewLong.text = it.coords?.long ?: ""
+            it.attachment.let { attachment ->
+                binding.textViewImage.text =
+                    if (attachment?.type == AttachmentType.IMAGE) attachment.url
+                    else ""
+            }
+        }
+
+        binding.createButton.setOnClickListener {
+            val content = binding.editNewPost.text.toString()
+            val link = AndroidUtils.checkLink(binding.editTextLink.text.toString())
+            if (link == "") {
+                Snackbar.make(binding.root, R.string.invalid_link, Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            viewModel.changeContent(content, link)
+            viewModel.save()
+            AndroidUtils.hideKeyboard(requireView())
+        }
+
+        viewModel.postCreated.observe(viewLifecycleOwner) {
+            findNavController().navigateUp()
+        }
+
+        binding.back.setOnClickListener {
+            viewModel.clearEdited()
+            findNavController().navigateUp()
+        }
+
+
+        // Attachment Image
         imageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 when (it.resultCode) {
@@ -78,33 +105,23 @@ class NewPostFragment: Fragment() {
                     }
                 }
             }
-
-        binding.createButton.setOnClickListener {
-            viewModel.changeContent(binding.editNewPost.text.toString())
-            viewModel.save()
-            AndroidUtils.hideKeyboard(requireView())
-        }
-
-        viewModel.postCreated.observe(viewLifecycleOwner) {
-            findNavController().navigateUp()
-        }
-
         binding.addImageButton.setOnClickListener {
             ImagePicker.with(this)
                 .crop()
                 .compress(2048)
                 .createIntent(imageLauncher!!::launch)
         }
-
         binding.clearImage.setOnClickListener {
             viewModel.clearMedia()
         }
-
         viewModel.media.observe(viewLifecycleOwner) { media ->
-            binding.clearImage.isVisible = media != null
-            binding.textViewImage.text = media?.file?.name
+            media?.let {
+                binding.textViewImage.text = media.file.name
+            }
         }
 
+
+        // Coordinates
         binding.addPlaceButton.setOnClickListener {
             findNavController().navigate(
                 R.id.action_newPostFragment_to_mapFragment,
@@ -113,21 +130,10 @@ class NewPostFragment: Fragment() {
                 )
             )
         }
-
-        viewModel.edited.observe(viewLifecycleOwner) {
-            binding.textViewLat.text = it.coords?.lat ?: ""
-            binding.textViewLong.text = it.coords?.long ?: ""
-            binding.clearCoordinates.isVisible = it.coords != null
-        }
-
         binding.clearCoordinates.setOnClickListener {
             viewModel.clearCoordinates()
         }
 
-        binding.back.setOnClickListener {
-            viewModel.clearEdited()
-            findNavController().navigateUp()
-        }
 
         return binding.root
     }

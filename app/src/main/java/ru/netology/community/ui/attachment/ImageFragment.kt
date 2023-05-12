@@ -1,18 +1,17 @@
 package ru.netology.community.ui.attachment
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.MediaController
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import ru.netology.community.databinding.FragmentVideoBinding
+import ru.netology.community.databinding.FragmentImageBinding
+import ru.netology.community.view.loadAttachment
 
-class VideoFragment : Fragment() {
+class ImageFragment: Fragment() {
 
-    private var _binding: FragmentVideoBinding? = null
+    private var _binding: FragmentImageBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -20,16 +19,10 @@ class VideoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentVideoBinding.inflate(inflater, container, false)
+        _binding = FragmentImageBinding.inflate(inflater, container, false)
 
-        val url = requireArguments().getString(URL)
-        binding.apply {
-            video.setVideoURI(Uri.parse(url))
-            val mediaController = MediaController(requireContext())
-            mediaController.setAnchorView(video)
-            mediaController.setMediaPlayer(video)
-            video.setMediaController(mediaController)
-            video.start()
+        requireArguments().getString(VideoFragment.URL)?.let {
+            binding.fullscreenImage.loadAttachment(it)
         }
 
         binding.back.setOnClickListener {
@@ -38,6 +31,8 @@ class VideoFragment : Fragment() {
 
         return binding.root
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

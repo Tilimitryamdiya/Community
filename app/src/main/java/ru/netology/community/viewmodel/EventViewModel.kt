@@ -71,6 +71,7 @@ class EventViewModel @Inject constructor(
 
     fun clearMedia() {
         _media.value = null
+        _edited.value = _edited.value?.copy(attachment = null)
     }
 
     fun save() {
@@ -122,9 +123,12 @@ class EventViewModel @Inject constructor(
     fun changeContent(
         content: String,
         datetime: String,
-        eventType: EventType) {
+        eventType: EventType,
+        link: String?,
+    ) {
         val text = content.trim()
-        _edited.value = edited.value?.copy(content = text, datetime = datetime, type = eventType)
+        _edited.value =
+            edited.value?.copy(content = text, datetime = datetime, type = eventType, link = link)
     }
 
     fun likeById(event: Event) {

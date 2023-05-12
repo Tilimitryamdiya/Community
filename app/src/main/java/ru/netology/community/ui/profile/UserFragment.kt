@@ -23,6 +23,7 @@ import ru.netology.community.dto.FeedItem
 import ru.netology.community.dto.Post
 import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.ui.MediaLifecycleObserver
+import ru.netology.community.ui.attachment.ImageFragment
 import ru.netology.community.ui.attachment.VideoFragment
 import ru.netology.community.ui.map.MapFragment
 import ru.netology.community.view.load
@@ -32,10 +33,6 @@ import ru.netology.community.viewmodel.UserViewModel
 
 class UserFragment : Fragment() {
 
-    companion object {
-        const val USER_ID = "USER_ID"
-    }
-
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
 
@@ -44,7 +41,6 @@ class UserFragment : Fragment() {
     private val jobViewModel by activityViewModels<JobViewModel>()
 
     private val mediaObserver = MediaLifecycleObserver()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,8 +64,9 @@ class UserFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 jobViewModel.data.collectLatest { jobsList ->
                     if (jobsList.isNotEmpty()) {
-                        binding.titlePosition.text = jobsList[0].position
-                        binding.titleWork.text = jobsList[0].name
+                        val job = jobViewModel.getCurrentJob(jobsList)
+                        binding.titlePosition.text = job.position
+                        binding.titleWork.text = job.name
                     }
                 }
             }
@@ -126,6 +123,15 @@ class UserFragment : Fragment() {
                     )
                 )
             }
+
+            override fun onImage(url: String) {
+                findNavController().navigate(
+                    R.id.action_userFragment_to_imageFragment,
+                    bundleOf(
+                        ImageFragment.URL to url
+                    )
+                )
+            }
         })
         binding.listContainer.adapter = adapter
 
@@ -166,5 +172,9 @@ class UserFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val USER_ID = "USER_ID"
     }
 }

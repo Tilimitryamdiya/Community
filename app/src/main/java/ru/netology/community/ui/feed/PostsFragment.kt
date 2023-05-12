@@ -12,7 +12,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,6 +23,7 @@ import ru.netology.community.dto.FeedItem
 import ru.netology.community.dto.Post
 import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.ui.MediaLifecycleObserver
+import ru.netology.community.ui.attachment.ImageFragment
 import ru.netology.community.ui.attachment.VideoFragment
 import ru.netology.community.ui.map.MapFragment
 import ru.netology.community.ui.profile.UserFragment
@@ -91,17 +91,18 @@ class PostsFragment : Fragment() {
                     )
                 )
             }
+
+            override fun onImage(url: String) {
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_imageFragment,
+                    bundleOf(
+                        ImageFragment.URL to url
+                    )
+                )
+            }
         })
 
         binding.listPosts.adapter = adapter
-
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    binding.listPosts.smoothScrollToPosition(0)
-                }
-            }
-        })
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -111,16 +112,12 @@ class PostsFragment : Fragment() {
             }
         }
 
-
         postViewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.swiperefresh.isRefreshing = state.refreshing
             if (state.error) {
                 Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
                     .show()
             }
-        }
-        mediaObserver.player?.setOnCompletionListener {
-            mediaObserver.player?.stop()
         }
 
         lifecycleScope.launch {
@@ -130,6 +127,10 @@ class PostsFragment : Fragment() {
                         state.refresh is LoadState.Loading
                 }
             }
+        }
+
+        mediaObserver.player?.setOnCompletionListener {
+            mediaObserver.player?.stop()
         }
 
         binding.swiperefresh.setOnRefreshListener(adapter::refresh)

@@ -58,7 +58,7 @@ class LoginFragment : Fragment() {
             if (state.invalidLoginOrPass) {
                 Snackbar.make(
                     binding.root,
-                    R.string.invalidAuth,
+                    R.string.invalid_auth,
                     Snackbar.LENGTH_LONG
                 ).show()
             }

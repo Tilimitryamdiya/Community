@@ -57,56 +57,24 @@ class NewEventFragment : Fragment() {
             binding.textViewDate.text = AndroidUtils.formatDate(it.datetime)
             binding.textViewTime.text = AndroidUtils.formatTime(it.datetime)
             if (it.type == EventType.OFFLINE) {
-                binding.typeOffline.isChecked
+                binding.typeOffline.isChecked = true
             } else {
-                binding.typeOnline.isChecked
+                binding.typeOnline.isChecked = true
             }
-            binding.textViewLat.text = it.coords?.lat
-            binding.textViewLong.text = it.coords?.long
+            binding.editTextLink.setText(it.link)
+            if (it.attachment?.type == AttachmentType.IMAGE) {
+                binding.textViewImage.text = it.attachment.url
+            }
         }
 
-        imageLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                when (it.resultCode) {
-                    ImagePicker.RESULT_ERROR -> {
-                        Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
-                            .show()
-                    }
-                    else -> {
-                        val uri = it.data?.data ?: return@registerForActivityResult
-                        viewModel.addMedia(uri, uri.toFile(), AttachmentType.IMAGE)
-                    }
-                }
+        viewModel.edited.observe(viewLifecycleOwner) {
+            binding.textViewLat.text = it.coords?.lat ?: ""
+            binding.textViewLong.text = it.coords?.long ?: ""
+            it.attachment.let { attachment ->
+                binding.textViewImage.text =
+                    if (attachment?.type == AttachmentType.IMAGE) attachment.url
+                    else ""
             }
-
-        binding.addDate.setOnClickListener {
-            val datePickerFragment =
-                DatePickerFragment { day, month, year ->
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(Calendar.YEAR, year)
-                    selectedDate.set(Calendar.MONTH, month - 1)
-                    selectedDate.set(Calendar.DAY_OF_MONTH, day)
-                    val date = SimpleDateFormat(
-                        "yyyy-MM-dd",
-                        Locale.ROOT
-                    ).format(selectedDate.time)
-                    binding.textViewDate.text = date
-                }
-            datePickerFragment.show(childFragmentManager, "datePicker")
-
-        }
-
-        binding.addTime.setOnClickListener {
-            val timePickerFragment =
-                TimePickerFragment { hour, minute ->
-                    val selectedTime = Calendar.getInstance()
-                    selectedTime.set(Calendar.HOUR_OF_DAY, hour)
-                    selectedTime.set(Calendar.MINUTE, minute)
-                    val time =
-                        SimpleDateFormat("HH:mm", Locale.ROOT).format(selectedTime.time)
-                    binding.textViewTime.text = time
-                }
-            timePickerFragment.show(childFragmentManager, "timePicker")
         }
 
         binding.createButton.setOnClickListener {
@@ -129,10 +97,16 @@ class NewEventFragment : Fragment() {
                 } else {
                     EventType.ONLINE
                 }
+            val link = AndroidUtils.checkLink(binding.editTextLink.text.toString())
+            if (link == "") {
+                Snackbar.make(binding.root, R.string.invalid_link, Snackbar.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             viewModel.changeContent(
                 content = content,
                 datetime = datetime,
-                eventType = eventType
+                eventType = eventType,
+                link = link,
             )
             viewModel.save()
             AndroidUtils.hideKeyboard(requireView())
@@ -142,22 +116,74 @@ class NewEventFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        binding.back.setOnClickListener {
+            viewModel.clearEdited()
+            findNavController().navigateUp()
+        }
+
+
+        // Datetime
+        binding.addDate.setOnClickListener {
+            val datePickerFragment =
+                DatePickerFragment { day, month, year ->
+                    val selectedDate = Calendar.getInstance()
+                    selectedDate.set(Calendar.YEAR, year)
+                    selectedDate.set(Calendar.MONTH, month - 1)
+                    selectedDate.set(Calendar.DAY_OF_MONTH, day)
+                    val date = SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.ROOT
+                    ).format(selectedDate.time)
+                    binding.textViewDate.text = date
+                }
+            datePickerFragment.show(childFragmentManager, "datePicker")
+
+        }
+        binding.addTime.setOnClickListener {
+            val timePickerFragment =
+                TimePickerFragment { hour, minute ->
+                    val selectedTime = Calendar.getInstance()
+                    selectedTime.set(Calendar.HOUR_OF_DAY, hour)
+                    selectedTime.set(Calendar.MINUTE, minute)
+                    val time =
+                        SimpleDateFormat("HH:mm", Locale.ROOT).format(selectedTime.time)
+                    binding.textViewTime.text = time
+                }
+            timePickerFragment.show(childFragmentManager, "timePicker")
+        }
+
+
+        // Attachment Image
+        imageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                when (it.resultCode) {
+                    ImagePicker.RESULT_ERROR -> {
+                        Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
+                            .show()
+                    }
+                    else -> {
+                        val uri = it.data?.data ?: return@registerForActivityResult
+                        viewModel.addMedia(uri, uri.toFile(), AttachmentType.IMAGE)
+                    }
+                }
+            }
         binding.addImageButton.setOnClickListener {
             ImagePicker.with(this)
                 .crop()
                 .compress(2048)
                 .createIntent(imageLauncher!!::launch)
         }
-
         binding.clearImage.setOnClickListener {
             viewModel.clearMedia()
         }
-
         viewModel.media.observe(viewLifecycleOwner) { media ->
-            binding.clearImage.isVisible = media != null
-            binding.textViewImage.text = media?.file?.name
+            media?.let {
+                binding.textViewImage.text = media.file.name
+            }
         }
 
+
+        // Coordinates
         binding.addPlaceButton.setOnClickListener {
             findNavController().navigate(
                 R.id.action_newEventFragment_to_mapFragment,
@@ -166,20 +192,8 @@ class NewEventFragment : Fragment() {
                 )
             )
         }
-
-        viewModel.edited.observe(viewLifecycleOwner) {
-            binding.textViewLat.text = it.coords?.lat ?: ""
-            binding.textViewLong.text = it.coords?.long ?: ""
-            binding.clearCoordinates.isVisible = it.coords != null
-        }
-
         binding.clearCoordinates.setOnClickListener {
             viewModel.clearCoordinates()
-        }
-
-        binding.back.setOnClickListener {
-            viewModel.clearEdited()
-            findNavController().navigateUp()
         }
 
         return binding.root

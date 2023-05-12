@@ -11,6 +11,7 @@ import ru.netology.community.auth.AppAuth
 import ru.netology.community.dto.Job
 import ru.netology.community.model.FeedModelState
 import ru.netology.community.repository.job.JobRepository
+import ru.netology.community.utils.AndroidUtils
 import ru.netology.community.utils.SingleLiveEvent
 import javax.inject.Inject
 
@@ -118,4 +119,7 @@ class JobViewModel @Inject constructor(
             }
         }
     }
+
+    fun getCurrentJob(list: List<Job>) =
+        list.maxBy { AndroidUtils.dateToTimestamp(it.start) }
 }

@@ -24,6 +24,7 @@ import ru.netology.community.dto.Event
 import ru.netology.community.dto.FeedItem
 import ru.netology.community.enumeration.AttachmentType
 import ru.netology.community.ui.MediaLifecycleObserver
+import ru.netology.community.ui.attachment.ImageFragment
 import ru.netology.community.ui.attachment.VideoFragment
 import ru.netology.community.ui.map.MapFragment
 import ru.netology.community.ui.profile.UserFragment
@@ -87,6 +88,15 @@ class EventsFragment : Fragment() {
                     R.id.action_feedFragment_to_videoFragment,
                     bundleOf(
                         VideoFragment.URL to url
+                    )
+                )
+            }
+
+            override fun onImage(url: String) {
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_imageFragment,
+                    bundleOf(
+                        ImageFragment.URL to url
                     )
                 )
             }
