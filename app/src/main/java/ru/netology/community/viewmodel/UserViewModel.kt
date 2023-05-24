@@ -33,10 +33,4 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun putUser(user: User) {
-        _user.value = user
-    }
-
-    fun getUser() = _user.value
-
 }

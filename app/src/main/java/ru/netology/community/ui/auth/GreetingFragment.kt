@@ -14,8 +14,6 @@ import ru.netology.community.viewmodel.AuthViewModel
 
 @AndroidEntryPoint
 class GreetingFragment : Fragment() {
-    private var _binding: FragmentGreetingBinding? = null
-    private val binding get() = _binding!!
 
     private val authViewModel by viewModels<AuthViewModel>()
 
@@ -24,7 +22,7 @@ class GreetingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentGreetingBinding.inflate(inflater, container, false)
+        val binding = FragmentGreetingBinding.inflate(inflater, container, false)
         authViewModel.data.observe(viewLifecycleOwner) {
             if (authViewModel.authorized) {
                 findNavController().navigate(R.id.action_greetingFragment_to_feedFragment)
@@ -44,10 +42,5 @@ class GreetingFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

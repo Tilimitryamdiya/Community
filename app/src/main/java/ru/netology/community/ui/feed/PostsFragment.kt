@@ -31,9 +31,6 @@ import ru.netology.community.viewmodel.PostViewModel
 
 class PostsFragment : Fragment() {
 
-    private var _binding: FragmentPostsBinding? = null
-    private val binding get() = _binding!!
-
     private val postViewModel by activityViewModels<PostViewModel>()
     private val mediaObserver = MediaLifecycleObserver()
 
@@ -42,7 +39,7 @@ class PostsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPostsBinding.inflate(inflater, container, false)
+        val binding = FragmentPostsBinding.inflate(inflater, container, false)
 
         val adapter = FeedAdapter(object : OnInteractionListener {
             override fun onLike(feedItem: FeedItem) {
@@ -137,11 +134,5 @@ class PostsFragment : Fragment() {
 
 
         return binding.root
-    }
-
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

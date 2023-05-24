@@ -1,6 +1,5 @@
 package ru.netology.community.ui.profile
 
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +16,6 @@ import java.util.*
 
 class NewJobFragment : Fragment() {
 
-    private var _binding: FragmentNewJobBinding? = null
-    private val binding get() = _binding!!
-
     private val viewModel: JobViewModel by activityViewModels()
 
     private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -34,7 +30,7 @@ class NewJobFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewJobBinding.inflate(inflater, container, false)
+        val binding = FragmentNewJobBinding.inflate(inflater, container, false)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
 
@@ -57,10 +53,7 @@ class NewJobFragment : Fragment() {
                     selectedDate.set(Calendar.YEAR, year)
                     selectedDate.set(Calendar.MONTH, month - 1)
                     selectedDate.set(Calendar.DAY_OF_MONTH, day)
-                    val date = SimpleDateFormat(
-                        "yyyy-MM-dd",
-                        Locale.getDefault()
-                    ).format(selectedDate.time)
+                    val date = AndroidUtils.formatDatePicker(selectedDate.time)
                     binding.jobStart.text = date
                 }
             datePickerFragment.show(childFragmentManager, "datePicker")
@@ -73,10 +66,7 @@ class NewJobFragment : Fragment() {
                     selectedDate.set(Calendar.YEAR, year)
                     selectedDate.set(Calendar.MONTH, month - 1)
                     selectedDate.set(Calendar.DAY_OF_MONTH, day)
-                    val date = SimpleDateFormat(
-                        "yyyy-MM-dd",
-                        Locale.getDefault()
-                    ).format(selectedDate.time)
+                    val date = AndroidUtils.formatDatePicker(selectedDate.time)
                     binding.jobFinish.text = date
                 }
             datePickerFragment.show(childFragmentManager, "datePicker")
@@ -99,10 +89,5 @@ class NewJobFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

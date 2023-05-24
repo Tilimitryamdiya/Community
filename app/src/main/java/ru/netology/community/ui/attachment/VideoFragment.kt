@@ -12,15 +12,12 @@ import ru.netology.community.databinding.FragmentVideoBinding
 
 class VideoFragment : Fragment() {
 
-    private var _binding: FragmentVideoBinding? = null
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentVideoBinding.inflate(inflater, container, false)
+        val binding = FragmentVideoBinding.inflate(inflater, container, false)
 
         val url = requireArguments().getString(URL)
         binding.apply {
@@ -38,12 +35,6 @@ class VideoFragment : Fragment() {
 
         return binding.root
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 
     companion object {
         const val URL = "URL"

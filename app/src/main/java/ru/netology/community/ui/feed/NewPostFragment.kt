@@ -25,9 +25,6 @@ import ru.netology.community.viewmodel.PostViewModel
 
 class NewPostFragment: Fragment() {
 
-    private var _binding: FragmentNewPostBinding? = null
-    private val binding get() = _binding!!
-
     private val viewModel: PostViewModel by activityViewModels()
     private var imageLauncher: ActivityResultLauncher<Intent>? = null
 
@@ -43,7 +40,7 @@ class NewPostFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewPostBinding.inflate(inflater, container, false)
+        val binding = FragmentNewPostBinding.inflate(inflater, container, false)
         binding.eventGroup.isVisible = false
 
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -140,7 +137,6 @@ class NewPostFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         imageLauncher = null
     }
 }

@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "ru.netology.community"
-        minSdk 26
+        minSdk 24
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -36,6 +36,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -116,6 +117,9 @@ dependencies {
 
     //ImagePicker
     implementation "com.github.dhaval2404:imagepicker:$imagepicker_version"
+
+    // Desugaring
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
 
     def junit_version = "4.13.2"

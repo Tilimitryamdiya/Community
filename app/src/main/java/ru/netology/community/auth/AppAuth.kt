@@ -65,7 +65,7 @@ class AppAuth @Inject constructor(
         fun getApiService(): ApiService
     }
 
-    fun sendPushToken(token: String? = null) {
+    private fun sendPushToken(token: String? = null) {
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 val pushToken = token ?: ""

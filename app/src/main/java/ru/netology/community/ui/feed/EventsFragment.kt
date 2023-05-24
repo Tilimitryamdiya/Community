@@ -31,8 +31,6 @@ import ru.netology.community.ui.profile.UserFragment
 import ru.netology.community.viewmodel.EventViewModel
 
 class EventsFragment : Fragment() {
-    private var _binding: FragmentEventsBinding? = null
-    private val binding get() = _binding!!
 
     private val eventViewModel by activityViewModels<EventViewModel>()
     private val mediaObserver = MediaLifecycleObserver()
@@ -42,7 +40,7 @@ class EventsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentEventsBinding.inflate(inflater, container, false)
+        val binding = FragmentEventsBinding.inflate(inflater, container, false)
 
         val adapter = FeedAdapter(object : OnInteractionListener {
             override fun onLike(feedItem: FeedItem) {
@@ -142,10 +140,5 @@ class EventsFragment : Fragment() {
         binding.swiperefresh.setOnRefreshListener(adapter::refresh)
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -33,9 +33,6 @@ import ru.netology.community.viewmodel.UserViewModel
 
 class UserFragment : Fragment() {
 
-    private var _binding: FragmentUserBinding? = null
-    private val binding get() = _binding!!
-
     private val userViewModel by activityViewModels<UserViewModel>()
     private val postViewModel by activityViewModels<PostViewModel>()
     private val jobViewModel by activityViewModels<JobViewModel>()
@@ -47,7 +44,7 @@ class UserFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentUserBinding.inflate(inflater, container, false)
+        val binding = FragmentUserBinding.inflate(inflater, container, false)
 
         val userId = requireArguments().getInt(USER_ID)
 
@@ -93,7 +90,7 @@ class UserFragment : Fragment() {
             }
 
             override fun onEdit(feedItem: FeedItem) {
-                findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+                findNavController().navigate(R.id.action_userFragment_to_newPostFragment)
                 postViewModel.edit(feedItem as Post)
             }
 
@@ -167,11 +164,6 @@ class UserFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {

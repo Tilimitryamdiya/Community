@@ -24,13 +24,6 @@ import ru.netology.community.viewmodel.JobViewModel
 
 class JobsFragment : Fragment() {
 
-    companion object {
-        const val USER_ID = "USER_ID"
-    }
-
-    private var _binding: FragmentJobsBinding? = null
-    private val binding get() = _binding!!
-
     private val jobViewModel by activityViewModels<JobViewModel>()
     private val authViewModel by activityViewModels<AuthViewModel>()
 
@@ -39,7 +32,7 @@ class JobsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentJobsBinding.inflate(inflater, container, false)
+        val binding = FragmentJobsBinding.inflate(inflater, container, false)
 
         binding.addJob.setOnClickListener {
             findNavController().navigate(R.id.action_jobsFragment_to_newJobFragment)
@@ -89,9 +82,8 @@ class JobsFragment : Fragment() {
         return binding.root
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    companion object {
+        const val USER_ID = "USER_ID"
     }
+
 }

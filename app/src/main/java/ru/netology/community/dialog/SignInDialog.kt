@@ -1,4 +1,4 @@
-package ru.netology.nmedia.dialog
+package ru.netology.community.dialog
 
 import android.app.Dialog
 import android.os.Bundle
@@ -15,13 +15,9 @@ class SignInDialog : DialogFragment() {
             AlertDialog.Builder(requireContext())
                 .setMessage(R.string.sign_in)
                 .setPositiveButton(R.string.sign_in) { _, _ ->
-                    findNavController().navigate(R.id.action_feedFragment_to_loginFragment)
+                    findNavController().navigate(R.id.action_sigInDialog_to_loginFragment)
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .create()
         }
-
-    companion object {
-        const val TAG = "SignInDialog"
-    }
 }

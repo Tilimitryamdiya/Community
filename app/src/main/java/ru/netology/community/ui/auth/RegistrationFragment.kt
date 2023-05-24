@@ -25,8 +25,6 @@ import ru.netology.community.viewmodel.RegisterViewModel
 @AndroidEntryPoint
 class RegistrationFragment : Fragment() {
 
-    private var _binding: FragmentRegistrationBinding? = null
-    private val binding get() = _binding!!
     private val viewModel: RegisterViewModel by activityViewModels()
     private var imageLauncher: ActivityResultLauncher<Intent>? = null
 
@@ -34,7 +32,7 @@ class RegistrationFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRegistrationBinding.inflate(inflater, container, false)
+        val binding = FragmentRegistrationBinding.inflate(inflater, container, false)
 
         imageLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -136,7 +134,6 @@ class RegistrationFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         imageLauncher = null
     }
 }

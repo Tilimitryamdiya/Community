@@ -17,15 +17,13 @@ import ru.netology.community.viewmodel.AuthViewModel
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
     private val viewModel: AuthViewModel by activityViewModels()
-    private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        val binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         with(binding) {
             loginButton.setOnClickListener {
@@ -73,10 +71,5 @@ class LoginFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

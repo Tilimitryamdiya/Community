@@ -1,7 +1,6 @@
 package ru.netology.community.ui.feed
 
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,9 +27,6 @@ import java.util.*
 
 class NewEventFragment : Fragment() {
 
-    private var _binding: FragmentNewPostBinding? = null
-    private val binding get() = _binding!!
-
     private val viewModel: EventViewModel by activityViewModels()
     private var imageLauncher: ActivityResultLauncher<Intent>? = null
 
@@ -46,7 +42,7 @@ class NewEventFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentNewPostBinding.inflate(inflater, container, false)
+        val binding = FragmentNewPostBinding.inflate(inflater, container, false)
         binding.eventGroup.isVisible = true
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
@@ -130,10 +126,7 @@ class NewEventFragment : Fragment() {
                     selectedDate.set(Calendar.YEAR, year)
                     selectedDate.set(Calendar.MONTH, month - 1)
                     selectedDate.set(Calendar.DAY_OF_MONTH, day)
-                    val date = SimpleDateFormat(
-                        "yyyy-MM-dd",
-                        Locale.ROOT
-                    ).format(selectedDate.time)
+                    val date = AndroidUtils.formatDatePicker(selectedDate.time)
                     binding.textViewDate.text = date
                 }
             datePickerFragment.show(childFragmentManager, "datePicker")
@@ -145,8 +138,7 @@ class NewEventFragment : Fragment() {
                     val selectedTime = Calendar.getInstance()
                     selectedTime.set(Calendar.HOUR_OF_DAY, hour)
                     selectedTime.set(Calendar.MINUTE, minute)
-                    val time =
-                        SimpleDateFormat("HH:mm", Locale.ROOT).format(selectedTime.time)
+                    val time = AndroidUtils.formatTimePicker(selectedTime.time)
                     binding.textViewTime.text = time
                 }
             timePickerFragment.show(childFragmentManager, "timePicker")
@@ -202,7 +194,6 @@ class NewEventFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         imageLauncher = null
     }
 }

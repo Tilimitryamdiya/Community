@@ -1,6 +1,5 @@
 package ru.netology.community.viewmodel
 
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -10,8 +9,6 @@ import ru.netology.community.error.ApiError
 import ru.netology.community.model.AuthModel
 import ru.netology.community.model.AuthModelState
 import ru.netology.community.repository.auth.AuthRepository
-import ru.netology.community.dialog.SignOutDialog
-import ru.netology.nmedia.dialog.SignInDialog
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,18 +51,5 @@ class AuthViewModel @Inject constructor(
     fun logout() {
         appAuth.removeAuth()
         _state.value = AuthModelState(notLoggedIn = true)
-    }
-
-    fun confirmLogout(manager: FragmentManager, listener: SignOutDialog.ConfirmationListener) {
-        SignOutDialog(listener).show(manager, SignOutDialog.TAG)
-    }
-
-    fun isAuthorized(manager: FragmentManager): Boolean {
-        return if (appAuth.authState.value != AuthModel()) {
-            true
-        } else {
-            SignInDialog().show(manager, SignInDialog.TAG)
-            false
-        }
     }
 }

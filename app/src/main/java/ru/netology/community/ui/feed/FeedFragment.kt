@@ -22,8 +22,6 @@ import ru.netology.community.viewmodel.UserViewModel
 
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
-    private var _binding: FragmentFeedBinding? = null
-    private val binding get() = _binding!!
 
     private val authViewModel by viewModels<AuthViewModel>()
     private val userViewModel by viewModels<UserViewModel>()
@@ -33,7 +31,7 @@ class FeedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFeedBinding.inflate(inflater, container, false)
+        val binding = FragmentFeedBinding.inflate(inflater, container, false)
 
         authViewModel.data.observe(viewLifecycleOwner) { authModel ->
             binding.apply {
@@ -84,14 +82,12 @@ class FeedFragment : Fragment() {
         }
 
         binding.logOut.setOnClickListener {
-            authViewModel.confirmLogout(
-                childFragmentManager,
-                object : SignOutDialog.ConfirmationListener {
-                    override fun confirmButtonClicked() {
-                        authViewModel.logout()
-                        findNavController().navigate(R.id.action_feedFragment_to_greetingFragment)
-                    }
-                })
+            SignOutDialog(object : SignOutDialog.ConfirmationListener {
+                override fun confirmButtonClicked() {
+                    authViewModel.logout()
+                    findNavController().navigate(R.id.action_feedFragment_to_greetingFragment)
+                }
+            }).show(childFragmentManager, SignOutDialog.TAG)
         }
 
         // TabLayout + ViewPager2
@@ -102,7 +98,9 @@ class FeedFragment : Fragment() {
         }.attach()
 
         binding.addButton.setOnClickListener {
-            if (authViewModel.isAuthorized(childFragmentManager)) {
+            if (!authViewModel.authorized) {
+                findNavController().navigate(R.id.action_feedFragment_to_signInDialog)
+            } else {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.menu_add)
                     setOnMenuItemClickListener { item ->
@@ -119,15 +117,9 @@ class FeedFragment : Fragment() {
                         }
                     }
                 }.show()
-
             }
         }
 
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

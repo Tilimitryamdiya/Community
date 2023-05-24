@@ -57,9 +57,6 @@ interface ApiService {
         @Query("count") count: Int
     ): Response<List<Post>>
 
-    @GET("posts/{id}")
-    suspend fun getPostById(@Path("id") id: Int): Response<Post>
-
     @POST("posts")
     suspend fun createPost(@Body post: Post): Response<Post>
 
@@ -90,9 +87,6 @@ interface ApiService {
         @Query("count") count: Int
     ): Response<List<Event>>
 
-    @GET("events/{id}")
-    suspend fun getEventById(@Path("id") id: Int): Response<Event>
-
     @POST("events")
     suspend fun createEvent(@Body event: Event): Response<Event>
 
@@ -105,12 +99,6 @@ interface ApiService {
     @DELETE("events/{id}/likes")
     suspend fun dislikeEventById(@Path("id") eventId: Int): Response<Event>
 
-    @POST("events/{id}/participants")
-    suspend fun addParticipateEventById(@Path("id") eventId: Int): Response<Event>
-
-    @DELETE("events/{id}/participants")
-    suspend fun deleteParticipateEventById(@Path("id") eventId: Int): Response<Event>
-
 
     // Media
 
@@ -120,9 +108,6 @@ interface ApiService {
 
 
     //User
-
-    @GET("users")
-    suspend fun getAll(): Response<List<User>>
 
     @GET("users/{id}")
     suspend fun getUserById(@Path("id") id: Int): Response<User>

@@ -40,9 +40,6 @@ import ru.netology.community.viewmodel.PostViewModel
 
 class MapFragment : Fragment() {
 
-    private var _binding: FragmentMapBinding? = null
-    private val binding get() = _binding!!
-
     private val mapViewModel by activityViewModels<MapViewModel>()
     private val postViewModel by activityViewModels<PostViewModel>()
     private val eventViewModel by activityViewModels<EventViewModel>()
@@ -135,7 +132,7 @@ class MapFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMapBinding.inflate(inflater, container, false)
+        val binding = FragmentMapBinding.inflate(inflater, container, false)
 
         mapView = binding.mapView.apply {
             userLocationLayer = MapKitFactory.getInstance().createUserLocationLayer(mapWindow)
@@ -262,7 +259,6 @@ class MapFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         mapView = null
-        _binding = null
     }
 
 

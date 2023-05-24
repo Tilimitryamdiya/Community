@@ -7,10 +7,10 @@ import ru.netology.community.BuildConfig
 
 @HiltAndroidApp
 class CommunityApp: Application() {
-    private val MAPKIT_API_KEY = BuildConfig.API_KEY
+    private val mapkitApiKey = BuildConfig.API_KEY
 
     override fun onCreate() {
         super.onCreate()
-        MapKitFactory.setApiKey(MAPKIT_API_KEY)
+        MapKitFactory.setApiKey(mapkitApiKey)
     }
 }
